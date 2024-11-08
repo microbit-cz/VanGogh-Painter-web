@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+:root {
+    --text: #dde3f3;
+    --background: #070c18;
+    --primary: #95b0e9;
+    --secondary: #112c69;
+    --accent: #1a65ef;
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        --text: #0c1222;
+        --background: #e7ecf8;
+        --primary: #16306a;
+        --secondary: #aac1ff;
+        --accent: #104bd5;
+    }
+}
+
+#root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+html {
+    font-size: 16px;
+    margin: 0 auto;
+    scroll-behavior: smooth;
+    height: 100vh;
+}
+
+body {
+    background-color: var(--background);
+    margin: 0;
+}
+
+main {
+    flex: 1;
+}
+
+@media (max-width: 768px) {
+    html {
+        font-size: 14px;
+    }
+}

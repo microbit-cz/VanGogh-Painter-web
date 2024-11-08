@@ -1,0 +1,28 @@
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: .25em .75em;
+    background-color: var(--secondary);
+    border-bottom: 4px solid var(--accent);
+}
+
+.header__title {
+    cursor: pointer;
+    width: min-content;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 2rem;
+    color: var(--text);
+}
+.header__titler:hover {
+    background-color: rgba(0, 0, 0, 0);;
+    border: none;
+}
+
+@media (max-width: 768px) {
+    .header__title {
+        font-size: 1.5rem;
+    }
+}

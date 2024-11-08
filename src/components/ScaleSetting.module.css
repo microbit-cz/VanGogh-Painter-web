@@ -1,0 +1,72 @@
+.scaleSetting__container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--secondary);
+    border: 1px solid var(--accent);
+    border-radius: .5em;
+    color: var(--text);
+    width: 20em;
+    font-family: 'Open Sans', sans-serif;
+    padding: 1em 2em;
+}
+
+.scaleSetting__title {
+    font-size: 2rem;
+    margin: 0;
+    padding: 0;
+    color: var(--text);
+}
+
+.scaleSetting__inputContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .5em;
+    margin: 0;
+    padding: 0;
+}
+
+.scaleSetting__button {
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    border-radius: .5em;
+    color: var(--text);
+    cursor: pointer;
+    font-size: 1.5rem;
+    margin: 0;
+    padding: .5em;
+    justify-content: center;
+    align-items: center;
+}
+
+.scaleSetting__button:hover {
+    background-color: var(--accent);
+    color: var(--text);
+}
+
+.scaleSetting__button svg {
+    width: 2em;
+    height: 2em;
+}
+
+.scaleSetting__input {
+    height: 2em;
+}
+
+@media (max-width: 768px) {
+    .scaleSetting__container {
+        width: 20em;
+    }
+    .scaleSetting__title {
+        font-size: 1.5rem;
+    }
+    .scaleSetting__button svg {
+        width: 1.5em;
+        height: 1.5em;
+    }
+    .scaleSetting__input {
+        height: 1.5em;
+    }
+}
