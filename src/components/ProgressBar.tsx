@@ -1,4 +1,6 @@
-export const ProgressBar = () => {
+import {FC} from "react";
+
+export const ProgressBar: FC = () => {
     return (
         <></>
     );

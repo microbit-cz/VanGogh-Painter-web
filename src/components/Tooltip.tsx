@@ -1,4 +1,6 @@
-export const Tooltip = () => {
+import {FC} from "react";
+
+export const Tooltip: FC = () => {
     return (
         <></>
     );

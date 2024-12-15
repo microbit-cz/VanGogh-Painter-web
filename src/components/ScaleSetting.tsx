@@ -1,7 +1,8 @@
 import {Icon, IconVariant} from "./Icon.tsx";
 import Styles from "./ScaleSetting.module.css";
+import {FC} from "react";
 
-export const ScaleSetting = () => {
+export const ScaleSetting: FC = () => {
     return (
         <div className={Styles["scaleSetting__container"]}>
             <p className={Styles["scaleSetting__title"]}>Real size multiplier:</p>
