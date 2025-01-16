@@ -3,17 +3,20 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    align-self: center;
     background-color: var(--secondary);
     border: 1px solid var(--accent);
     border-radius: .5em;
     color: var(--text);
-    width: 20em;
+    width: min-content;
+    height: 100%; /* Fill height */
     font-family: 'Open Sans', sans-serif;
-    padding: 1em 2em;
+    padding: 1em;
+    gap: .5em;
 }
 
 .scaleSetting__title {
-    font-size: 2rem;
+    font-size: 1.25rem;
     margin: 0;
     padding: 0;
     color: var(--text);
@@ -36,7 +39,7 @@
     cursor: pointer;
     font-size: 1.5rem;
     margin: 0;
-    padding: .5em;
+    padding: .25em;
     justify-content: center;
     align-items: center;
 }
@@ -46,21 +49,34 @@
     color: var(--text);
 }
 
-.scaleSetting__button svg {
-    width: 2em;
-    height: 2em;
+.scaleSetting__inputNumberContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 2em;
+    padding: 0;
 }
 
 .scaleSetting__input {
     height: 2em;
+    width: 1em;
+    background-color: var(--secondary);
+    border: none;
+    color: var(--text);
+    font-size: 1.5rem;
+}
+
+.scaleSetting__unit {
+    font-size: 1.5rem;
 }
 
 @media (max-width: 768px) {
     .scaleSetting__container {
-        width: 20em;
+        width: min-content;
+        gap: .5em;
     }
     .scaleSetting__title {
-        font-size: 1.5rem;
+        font-size: 1.2rem;
     }
     .scaleSetting__button svg {
         width: 1.5em;

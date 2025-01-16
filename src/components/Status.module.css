@@ -1,0 +1,20 @@
+.status__container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
+    margin: .5em;
+}
+
+.status__text {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.2rem;
+    color: var(--text);
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .status__container {
+        margin: 0;
+    }
+}

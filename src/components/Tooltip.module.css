@@ -1,0 +1,127 @@
+.tooltip__container {
+    position: relative;
+    border: 1px solid var(--accent);
+    border-radius: 0.5em;
+    background-color: var(--secondary);
+    width: 20em;
+    font-family: 'Open Sans', sans-serif;
+    color: var(--text);
+    padding: 0.5em 1em;
+    margin: 0 auto;
+}
+
+.tooltip__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5em;
+    height: min-content;
+}
+
+.tooltip__title {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.tooltip__text {
+    padding: 0;
+    margin: 0.5em 0;
+}
+
+.tooltip__footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5em 0;
+}
+
+.tooltip__count {
+    font-size: 1.25rem;
+    margin: 0;
+}
+
+.tooltip__container::after {
+    content: '';
+    position: absolute;
+    border-style: solid;
+    border-width: 25px;
+    border-color: transparent;
+    z-index: 1;
+}
+
+.tooltip__container::before {
+    content: '';
+    position: absolute;
+    border-style: solid;
+    border-width: 26px;
+    border-color: transparent;
+}
+
+.tooltip--bottom::after {
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-bottom: 0;
+    border-top-color: var(--secondary);
+}
+
+.tooltip--bottom::before {
+    bottom: -26px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-bottom: 0;
+    border-top-color: var(--accent);
+}
+
+.tooltip--top::after {
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-top: 0;
+    border-bottom-color: var(--secondary);
+}
+
+.tooltip--top::before {
+    top: -26px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-top: 0;
+    border-bottom-color: var(--accent);
+}
+
+.tooltip--right::after {
+    top: 50%;
+    right: -25px;
+    transform: translateY(-50%);
+    border-right: 0;
+    border-left-color: var(--secondary);
+}
+
+.tooltip--right::before {
+    top: 50%;
+    right: -26px;
+    transform: translateY(-50%);
+    border-right: 0;
+    border-left-color: var(--accent);
+}
+
+.tooltip--left::after {
+    top: 50%;
+    left: -25px;
+    transform: translateY(-50%);
+    border-left: 0;
+    border-right-color: var(--secondary);
+}
+
+.tooltip--left::before {
+    top: 50%;
+    left: -26px;
+    transform: translateY(-50%);
+    border-left: 0;
+    border-right-color: var(--accent);
+}
+
+@media (max-width: 768px) {
+    .tooltip__container {
+        width: 15em;
+    }
+}

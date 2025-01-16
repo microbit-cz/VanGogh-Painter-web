@@ -1,6 +1,7 @@
 import {FC} from "react";
 import {Header} from "../components/Header.tsx";
 import Styles from "./AboutUs.module.css";
+import {Footer} from "../components/Footer.tsx";
 
 export const AboutUs: FC = () => {
 
@@ -32,6 +33,7 @@ export const AboutUs: FC = () => {
                     <img/>
                 </div>
             </main>
+            <Footer />
         </>
     )
 }

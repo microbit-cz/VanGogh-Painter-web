@@ -22,3 +22,9 @@
     padding: .5em 0em;
     margin: 0em;
 }
+
+@media (max-width: 768px) {
+    .aboutUs__article {
+        max-width: 90%;
+    }
+}

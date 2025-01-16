@@ -7,11 +7,13 @@ export const ScaleSetting: FC = () => {
         <div className={Styles["scaleSetting__container"]}>
             <p className={Styles["scaleSetting__title"]}>Real size multiplier:</p>
             <div className={Styles["scaleSetting__inputContainer"]}>
-                <button className={Styles["scaleSetting__button"]}><Icon variant={IconVariant.MINUS} /></button>
-                <input className={Styles["scaleSetting__input"]} type="number" defaultValue={1.0} />
-                <button className={Styles["scaleSetting__button"]}><Icon variant={IconVariant.PLUS} /></button>
+                <button className={Styles["scaleSetting__button"]}><Icon variant={IconVariant.MINUS} size={1} /></button>
+                <div className={Styles["scaleSetting__inputNumberContainer"]}>
+                    <span className={Styles["scaleSetting__unit"]}>×</span>
+                    <input className={Styles["scaleSetting__input"]} type="number" defaultValue={1.0}/>
+                </div>
+                <button className={Styles["scaleSetting__button"]}><Icon variant={IconVariant.PLUS} size={1}/></button>
             </div>
-            <button className={"btn"}>Default</button>
         </div>
     );
 };

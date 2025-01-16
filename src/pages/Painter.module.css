@@ -1,0 +1,74 @@
+.painter__container {
+    display: flex;
+    height: 100vh;
+
+    margin: 1em;
+}
+
+.painter__section {
+    display: flex;
+    flex-direction: column;
+}
+.painter__section.right {
+    justify-content: space-between;
+    margin: 0;
+}
+.painter__section.left {
+    width: 100%;
+}
+
+.painter__display {
+    width: calc(100% - 2em);
+    height: 100%;
+    margin: 0 .5em;
+}
+
+.painter__buttonContainer {
+    display: grid;
+    gap: .5em;
+}
+
+.painter__buttonContainer button {
+    width: 100%;
+    justify-content: space-between;
+}
+
+.painter__display {
+    height: 100%;
+    background-color : var(--accent);
+}
+
+.painter__topContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1em;
+}
+
+@media (max-width: 768px) {
+    .painter__container {
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+        margin: .5em;
+    }
+
+    .painter__section{
+        width: calc(100% - 2em);
+    }
+
+    .painter__section.right {
+        gap: 1em;
+    }
+    .painter__display {
+        height: 50vh;
+    }
+
+    .painter__buttonContainer {
+        gap: .5em;
+        grid-template-columns: 1fr 1fr
+    }
+    .painter__buttonContainer button:first-of-type {
+        grid-column: span 2;
+    }
+}
