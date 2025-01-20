@@ -1,4 +1,56 @@
 .editor__svgEditor {
-    width:100%;
-    height:100vh
+    width: 95%;
+}
+
+.editor__container {
+    display: flex;
+    flex-direction: row;
+    margin: 1em;
+    gap: 1em;
+}
+
+.editor__menu {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.editor__buttonContainer {
+    display: grid;
+    gap: .5em;
+}
+.editor__buttonContainer button {
+    width: 100%;
+    justify-content: space-between;
+}
+
+@media (max-width: 768px) {
+    .editor__container {
+        flex-direction: column;
+        align-items: center;
+        margin: .5em;
+    }
+
+    .editor__menu {
+        width: 100%;
+    }
+
+    .editor__svgEditor {
+        width: 100%;
+        height: 75vh;
+    }
+
+    .editor__menu {
+        display: flex;
+        justify-content: space-between;
+        margin: .5em;
+        gap: 1em;
+    }
+
+    .editor__buttonContainer {
+        display: flex;
+        flex-direction: row;
+        gap: .5em;
+        margin: 1em;
+    }
 }

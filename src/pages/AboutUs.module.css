@@ -1,8 +1,16 @@
+.aboutUs__page {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding: 2em 0;
+    margin: 2em;
+    background-color: var(--background);
+    color: var(--text);
+}
+
 .aboutUs__article {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
     margin: 0 auto;
     padding: 1em 4em;
     max-width: 40%;
@@ -13,14 +21,27 @@
 .aboutUs__title {
     font-size: 2rem;
     font-family: 'Open Sans', sans-serif;
-    padding: 0em;
-    margin: 0em;
+    padding: 0;
+    margin: 0;
 }
 
 .aboutUs__text {
     font-family: 'Open Sans', sans-serif;
-    padding: .5em 0em;
-    margin: 0em;
+    padding: .5em 0;
+    margin: 0;
+}
+
+.aboutUs__imgContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1em;
+    margin: 0 auto;
+}
+
+.aboutUs__img {
+    width: 20em;
+    height: fit-content;
+    margin: 0;
 }
 
 @media (max-width: 768px) {

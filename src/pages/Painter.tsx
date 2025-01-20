@@ -10,6 +10,8 @@ const handleEdit = () => {
 
 }
 
+//const canvasHeight = document.documentElement.clientHeight;
+
 export const Painter: FC = () => {
     const [isWorking, setIsWorking] = useState(false);
 
@@ -18,9 +20,8 @@ export const Painter: FC = () => {
             <Header />
             <main className={Styles["painter__container"]}>
                 <div className={`${Styles["painter__section"]} ${Styles["left"]}`}>
-                    <ProgressBar/>
-                    <div className={Styles["painter__display"]}></div>
-
+                    <ProgressBar />
+                    <canvas className={Styles["painter__display"]}></canvas>
                 </div>
                 <div className={`${Styles["painter__section"]} ${Styles["right"]}`}>
                     <div className={Styles["painter__topContainer"]}>

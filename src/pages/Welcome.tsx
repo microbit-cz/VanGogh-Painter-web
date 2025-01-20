@@ -3,6 +3,7 @@ import {Header} from "../components/Header.tsx";
 import {Icon, IconVariant} from "../components/Icon.tsx";
 import Styles from "./Welcome.module.css";
 import {getServices, requestMicrobit} from "microbit-web-bluetooth";
+import {Status} from "../components/Status.tsx";
 //import {useStore} from "../stores/main.ts";
 
 const handleConnect = async () => {
@@ -27,6 +28,7 @@ export const Welcome: FC = () => {
                 <p className={Styles["welcome__subtitle"]}>Connect via bluetooth.</p>
                 <button onClick={handleConnect} className={"btn btn--large"}>Connect <Icon variant={IconVariant.BLUETOOTH} /></button>
             </main>
+            <Status />
         </>
     )
 }

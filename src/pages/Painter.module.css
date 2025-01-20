@@ -1,7 +1,5 @@
 .painter__container {
     display: flex;
-    height: 100vh;
-
     margin: 1em;
 }
 
@@ -10,17 +8,17 @@
     flex-direction: column;
 }
 .painter__section.right {
-    justify-content: space-between;
     margin: 0;
+    justify-content: space-between;
 }
 .painter__section.left {
     width: 100%;
 }
 
 .painter__display {
-    width: calc(100% - 2em);
     height: 100%;
-    margin: 0 .5em;
+    background-color: grey;
+    align-self: center;
 }
 
 .painter__buttonContainer {
@@ -31,11 +29,6 @@
 .painter__buttonContainer button {
     width: 100%;
     justify-content: space-between;
-}
-
-.painter__display {
-    height: 100%;
-    background-color : var(--accent);
 }
 
 .painter__topContainer {
@@ -49,7 +42,7 @@
     .painter__container {
         flex-direction: column;
         align-items: center;
-        gap: 0;
+        gap: .5em;
         margin: .5em;
     }
 
@@ -62,6 +55,7 @@
     }
     .painter__display {
         height: 50vh;
+        align-self: center;
     }
 
     .painter__buttonContainer {

@@ -8,7 +8,7 @@ export const AboutUs: FC = () => {
     return (
         <>
             <Header />
-            <main>
+            <main className={Styles["aboutUs__page"]}>
                 <article className={Styles["aboutUs__article"]}>
                     <h1 className={Styles["aboutUs__title"]}>What is VanGogh Painter?</h1>
                     <section>
@@ -24,16 +24,16 @@ export const AboutUs: FC = () => {
                         <p className={Styles["aboutUs__text"]}>Curabitur dignissim elit sit amet aliquam pellentesque. Donec efficitur neque eu odio varius, non dignissim elit molestie. Duis fringilla egestas quam, non cursus justo venenatis nec. Donec dignissim velit non lacinia condimentum. Donec et finibus diam. Sed lacinia sem quam, at mollis felis semper vel. Nunc finibus orci non feugiat ornare. Nam euismod diam massa, sit amet malesuada mauris tristique sit amet. Sed auctor, felis sed fringilla dapibus, libero ipsum semper libero, vitae congue metus augue at dui.</p>
                     </section>
                 </article>
-                <div>
-                    <img/>
-                    <img/>
-                    <img/>
-                    <img/>
-                    <img/>
-                    <img/>
+                <div className={Styles["aboutUs__imgContainer"]}>
+                    <img className={Styles["aboutUs__img"]} src={"/img/VanGogh.jpg"} alt={"VanGogh Painter"}/>
+                    <img className={Styles["aboutUs__img"]} src={"/img/VanGogh.jpg"} alt={"VanGogh Painter"}/>
+                    <img className={Styles["aboutUs__img"]} src={"/img/VanGogh.jpg"} alt={"VanGogh Painter"}/>
+                    <img className={Styles["aboutUs__img"]} src={"/img/VanGogh.jpg"} alt={"VanGogh Painter"}/>
+                    <img className={Styles["aboutUs__img"]} src={"/img/VanGogh.jpg"} alt={"VanGogh Painter"}/>
+                    <img className={Styles["aboutUs__img"]} src={"/img/VanGogh.jpg"} alt={"VanGogh Painter"}/>
                 </div>
             </main>
-            <Footer />
+            <Footer/>
         </>
     )
 }
