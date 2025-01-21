@@ -10,8 +10,8 @@ type PainterState = {
 interface IPainterContext {
     state: PainterState;
     dispatch: (action: Action) => void;
-    currentSVG: string[] | null;
-    setCurrentSVG: (svg: string[]) => void;
+    currentSVG: SVGSVGElement | null;
+    setCurrentSVG: (svg: SVGSVGElement) => void;
 }
 
 type Action =
@@ -49,7 +49,7 @@ export const PainterContext = createContext<IPainterContext>({} as IPainterConte
 
 export const PainterProvider: FC<PropsWithChildren> = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
-    const [currentSVG, setCurrentSVG] = useState<string[] | null>(null);
+    const [currentSVG, setCurrentSVG] = useState<SVGSVGElement | null>(null);
 
     useEffect(() => {
         let timer: NodeJS.Timeout;

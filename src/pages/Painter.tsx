@@ -8,10 +8,8 @@ import {Status} from "../components/Status.tsx";
 import {PainterContext} from "../providers/PainterProvider.tsx";
 import {useNavigate} from "react-router-dom";
 
-//const canvasHeight = document.documentElement.clientHeight;
-
 export const Painter: FC = () => {
-    const { state, dispatch } = useContext(PainterContext);
+    const { state, dispatch, currentSVG } = useContext(PainterContext);
     const navigate = useNavigate();
 
     const handleStartPause = () => {
@@ -39,7 +37,7 @@ export const Painter: FC = () => {
             <main className={Styles["painter__container"]}>
                 <div className={`${Styles["painter__section"]} ${Styles["left"]}`}>
                     <ProgressBar />
-                    <canvas className={Styles["painter__display"]}></canvas>
+                    <div className={Styles["painter__display"]} dangerouslySetInnerHTML={{ __html: currentSVG?.outerHTML ?? ""}}></div>
                 </div>
                 <div className={`${Styles["painter__section"]} ${Styles["right"]}`}>
                     <div className={Styles["painter__topContainer"]}>

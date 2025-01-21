@@ -16,6 +16,7 @@
 }
 
 .painter__display {
+    width: calc(100% - 2em);
     height: 100%;
     background-color: grey;
     align-self: center;
