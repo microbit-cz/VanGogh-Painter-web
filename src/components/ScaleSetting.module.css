@@ -53,13 +53,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0 2em;
+    margin: 0 1em;
     padding: 0;
 }
 
 .scaleSetting__input {
     height: 2em;
-    width: 1em;
+    width: 2em;
     background-color: var(--secondary);
     border: none;
     color: var(--text);
@@ -68,6 +68,16 @@
 
 .scaleSetting__unit {
     font-size: 1.5rem;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
 }
 
 @media (max-width: 768px) {

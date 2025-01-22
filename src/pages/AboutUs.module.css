@@ -45,7 +45,19 @@
 }
 
 @media (max-width: 768px) {
+    .aboutUs__page {
+        flex-direction: column;
+        align-items: center;
+        margin: 0 1em;
+        gap: 1em;
+    }
+
     .aboutUs__article {
         max-width: 90%;
+        padding: 0;
+    }
+
+    .aboutUs__imgContainer {
+        grid-template-columns: 1fr;
     }
 }

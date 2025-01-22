@@ -12,20 +12,24 @@
     justify-content: space-between;
 }
 .painter__section.left {
-    width: 85%;
+    width: 100%;
+    margin-right: 1em;
 }
 
 .painter__displayContainer {
-    height: 80vh;
+    height: 100%;
     position: relative;
 }
 
 .painter__display {
-    width: calc(100% - 2em);
     height: 100%;
-    background-color: white;
+    background-color: #fff;
     align-self: center;
     overflow: hidden;
+}
+
+.painter__display svg {
+    height: 100%;
 }
 
 .painter__buttonContainer {
@@ -48,7 +52,7 @@
 .indicator {
     width: 10px;
     height: 10px;
-    background-color: red;
+    background-color: darkviolet;
     border-radius: 50%;
     pointer-events: none;
     transform: translate(0, 0);
@@ -68,6 +72,10 @@
 
     .painter__section{
         width: calc(100% - 2em);
+    }
+
+    .painter__section.left{
+        margin: 0;
     }
 
     .painter__section.right {
