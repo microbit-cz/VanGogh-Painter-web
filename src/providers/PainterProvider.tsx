@@ -37,7 +37,7 @@ const reducer = (state: PainterState, action: Action): PainterState => {
         case 'RESUME':
             return { ...state, isPaused: false };
         case 'STOP':
-            return { ...state, connStatus: false, isPaused: false, estimatedTime: 0, runTime: 0 };
+            return { ...state, isPaused: true, estimatedTime: 0, runTime: 0 };
         case 'TICK':
             return { ...state, runTime: state.estimatedTime > 0 ? state.runTime + 1 : 0 };
         default:

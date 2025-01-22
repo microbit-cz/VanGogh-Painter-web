@@ -2,7 +2,7 @@ import {FC, useContext, useEffect} from "react";
 import {Header} from "../components/Header.tsx";
 import {Icon, IconVariant} from "../components/Icon.tsx";
 import Styles from "./Welcome.module.css";
-import {getServices, requestMicrobit} from "microbit-web-bluetooth";
+//import {getServices, requestMicrobit} from "microbit-web-bluetooth";
 import {Status} from "../components/Status.tsx";
 import {useNavigate} from "react-router-dom";
 import {PainterContext} from "../providers/PainterProvider.tsx";
@@ -13,6 +13,7 @@ export const Welcome: FC = () => {
     const navigate = useNavigate();
 
     const handleConnect = async () => {
+        /*
         const device = await requestMicrobit(window.navigator.bluetooth);
         //useStore().connection.device = device;
         if (!device) {
@@ -22,6 +23,11 @@ export const Welcome: FC = () => {
         const services = await getServices(device);
         console.log(device);
         console.log(services);
+        if (device) {
+            navigate("/Upload");
+        }*/
+        // provizorní
+        navigate("/Upload");
     }
 
     useEffect(() => {

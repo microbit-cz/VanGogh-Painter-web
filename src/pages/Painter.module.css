@@ -12,14 +12,20 @@
     justify-content: space-between;
 }
 .painter__section.left {
-    width: 100%;
+    width: 85%;
+}
+
+.painter__displayContainer {
+    height: 80vh;
+    position: relative;
 }
 
 .painter__display {
     width: calc(100% - 2em);
     height: 100%;
-    background-color: grey;
+    background-color: white;
     align-self: center;
+    overflow: hidden;
 }
 
 .painter__buttonContainer {
@@ -37,6 +43,19 @@
     flex-direction: column;
     align-items: center;
     gap: 1em;
+}
+
+.indicator {
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(0, 0);
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    z-index: 1;
 }
 
 @media (max-width: 768px) {
