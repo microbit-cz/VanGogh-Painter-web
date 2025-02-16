@@ -34,11 +34,9 @@ export const ScaleSetting: FC<ScaleSettingProps> = ({ onScaleChange }) => {
                 <button onClick={handleDecrease} className={Styles["scaleSetting__button"]}><Icon variant={IconVariant.MINUS} size={1} /></button>
                 <div className={Styles["scaleSetting__inputNumberContainer"]}>
                     <span className={Styles["scaleSetting__unit"]}>×</span>
-                    <input className={Styles["scaleSetting__input"]} type="number" id="scale" name="scale" min="0.1"
-                           max="10" step="0.1" value={scale} onChange={handleInputChange}/>
+                    <input className={Styles["scaleSetting__input"]} type="number" id="scale" name="scale" min="0.1" max="10" step="0.1" value={scale} onChange={handleInputChange}/>
                 </div>
-                <button onClick={handleIncrease} className={Styles["scaleSetting__button"]}><Icon
-                    variant={IconVariant.PLUS} size={1}/></button>
+                <button onClick={handleIncrease} className={Styles["scaleSetting__button"]}><Icon variant={IconVariant.PLUS} size={1}/></button>
             </div>
         </div>
     );

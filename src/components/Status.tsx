@@ -1,7 +1,7 @@
-import {FC, useContext} from "react";
+import { FC, useContext } from "react";
 import Styles from "./Status.module.css";
 import { Icon, IconColor, IconVariant } from "./Icon.tsx";
-import {PainterContext} from "../providers/PainterProvider.tsx";
+import { PainterContext } from "../providers/PainterProvider.tsx";
 
 export const Status: FC = () => {
     const { state } = useContext(PainterContext);

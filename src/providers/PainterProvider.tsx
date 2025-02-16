@@ -1,4 +1,4 @@
-import {createContext, useState, FC, PropsWithChildren, useReducer, useEffect} from 'react';
+import {createContext, useState, FC, PropsWithChildren, useReducer} from 'react';
 
 type PainterState = {
     connStatus: boolean;
@@ -19,7 +19,8 @@ type Action =
     | { type: 'PAUSE' }
     | { type: 'RESUME' }
     | { type: 'STOP' }
-    | { type: 'TICK' };
+    | { type: 'TICK' }
+    | { type: 'DISCONNECT_CONNECT', payload: boolean };
 
 const initialState: PainterState = {
     connStatus: false,
@@ -40,6 +41,8 @@ const reducer = (state: PainterState, action: Action): PainterState => {
             return { ...state, isPaused: true, estimatedTime: 0, runTime: 0 };
         case 'TICK':
             return { ...state, runTime: state.estimatedTime > 0 ? state.runTime + 1 : 0 };
+        case 'DISCONNECT_CONNECT':
+            return { ...state, connStatus: action.payload };
         default:
             return state;
     }
@@ -50,16 +53,6 @@ export const PainterContext = createContext<IPainterContext>({} as IPainterConte
 export const PainterProvider: FC<PropsWithChildren> = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
     const [currentSVG, setCurrentSVG] = useState<SVGSVGElement | null>(null);
-
-    useEffect(() => {
-        let timer: NodeJS.Timeout;
-        if (!state.isPaused && !state.isPaused) {
-            timer = setInterval(() => {
-                dispatch({ type: 'TICK' });
-            }, 1000);
-        }
-        return () => clearInterval(timer);
-    }, [!state.isPaused, state.isPaused]);
 
     return (
         <PainterContext.Provider value={{ state, dispatch, currentSVG, setCurrentSVG }}>
