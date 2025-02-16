@@ -15,7 +15,7 @@ export const Welcome: FC = () => {
 
     const handleConnect = async () => {
         if (device) {
-            if (device.gatt && device.gatt.connected) {
+            if (device.gatt && device.gatt.connected) { 
                 await device.gatt.disconnect();
             }
             setDevice(null);

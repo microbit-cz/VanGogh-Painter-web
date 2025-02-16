@@ -25,6 +25,10 @@ export class Store<T> {
         this._update(key, value);
     }
 
+    public get<K extends keyof T>(key: K): T[K] | undefined {
+        return this.data[key as string] as T[K] | undefined;
+    }
+
     public empty() {
         Object.keys(this.data).forEach(key => {
             this._update(key as keyof T, undefined);
