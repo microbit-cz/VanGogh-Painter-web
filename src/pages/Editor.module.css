@@ -1,5 +1,6 @@
-.editor__svgEditor {
+.App {
     width: 95%;
+    height: 80vw;
 }
 
 .editor__container {

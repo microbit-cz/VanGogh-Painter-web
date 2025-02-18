@@ -1,11 +1,16 @@
-import {FC} from "react";
+import {FC, /*useContext*/} from "react";
 import {Header} from "../components/Header.tsx";
 import Styles from "./Editor.module.css";
 import {Icon, IconVariant} from "../components/Icon.tsx";
 import {Status} from "../components/Status.tsx";
 import {useNavigate} from "react-router-dom";
+//import {PainterContext} from "../providers/PainterProvider.tsx";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+import CanvasApp from "../SVGEditor/app.jsx";
 
 export const EditorPage: FC = () => {
+    //const { currentSVG } = useContext(PainterContext);
     const navigate = useNavigate();
 
     const handleDone = () => {
@@ -20,7 +25,7 @@ export const EditorPage: FC = () => {
         <>
             <Header/>
             <main className={Styles["editor__container"]}>
-                <iframe className={Styles["editor__svgEditor"]} src={"https://unpkg.com/svgedit@7.3.4/dist/editor/index.html"}></iframe>
+                <CanvasApp/>
                 <div className={Styles["editor__menu"]}>
                     <Status/>
                     <div className={Styles["editor__buttonContainer"]}>

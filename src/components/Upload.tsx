@@ -3,9 +3,10 @@ import Styles from "./Upload.module.css";
 import { FC, useContext } from "react";
 import { PainterContext } from "../providers/PainterProvider.tsx";
 import { useNavigate } from "react-router-dom";
+import {shapeToPath, ShapeTypes} from "svg-path-commander";
 
 export const Upload: FC = () => {
-    const { setCurrentSVG } = useContext(PainterContext);
+    const { setCurrentSVG, currentSVG } = useContext(PainterContext);
     const navigate = useNavigate();
 
     const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,9 +26,9 @@ export const Upload: FC = () => {
             const svgElement = new DOMParser().parseFromString(svgContent, "image/svg+xml").querySelector('svg');
 
             if (svgElement) {
-                const cleanSvg = cleanSvgElement(svgElement);
-                setCurrentSVG(cleanSvg);
-                console.log('Processed SVG element:', cleanSvg);
+                const pathDataList = extractPathData(svgElement);
+                setCurrentSVG(pathDataList);
+                console.log('SVG file uploaded:', pathDataList);
             } else {
                 console.error('No SVG element found in the uploaded file');
             }
@@ -36,15 +37,23 @@ export const Upload: FC = () => {
         }
     };
 
-    const cleanSvgElement = (svgElement: SVGSVGElement): SVGSVGElement => {
-        const cleanSvg = svgElement.cloneNode(true) as SVGSVGElement;
-        cleanSvg.removeAttribute('xmlns:xlink');
-        cleanSvg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-        const viewBox = svgElement.getAttribute('viewBox');
-        if (viewBox) {
-            cleanSvg.setAttribute('viewBox', viewBox);
-        }
-        return cleanSvg;
+    const extractPathData = (svgElement: SVGSVGElement): string[] => {
+        const pathData: string[] = [];
+
+        // Convert all shapes to paths and extract 'd' attributes
+        const shapes = svgElement.querySelectorAll('rect, circle, ellipse, line, polyline, polygon');
+        shapes.forEach(shape => {
+            const svgShape = shape as unknown as ShapeTypes; // Explicitly cast to ShapeTypes
+            const path = shapeToPath(svgShape);
+            if (path) {
+                const d = path.getAttribute('d');
+                if (d) {
+                    pathData.push(d);
+                }
+            }
+        });
+
+        return pathData;
     };
 
     const triggerFileInput = () => {

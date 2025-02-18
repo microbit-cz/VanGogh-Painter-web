@@ -10,25 +10,32 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@stencil/core": "^4.23.0",
     "@svgedit/svgcanvas": "^7.2.3",
+    "blocksin-system": "^1.6.1",
+    "color-string": "^2.0.1",
+    "fabric": "^6.6.1",
     "microbit-web-bluetooth": "^0.7.0",
+    "prop-types": "^15.8.1",
     "react": "^18.3.1",
+    "react-color": "^2.19.3",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.28.0",
-    "svgedit": "^7.3.4"
+    "sebikostudio-icons": "^1.4.9",
+    "svg-path-commander": "^2.1.10"
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
+    "@types/fabric": "^5.3.9",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
-    "@vitejs/plugin-react": "^4.3.3",
+    "@vitejs/plugin-react": "^1.3.2",
     "eslint": "^9.13.0",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.14",
     "globals": "^15.11.0",
+    "less": "^4.2.2",
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.11.0",
-    "vite": "^5.4.10"
+    "vite": "^6.1.0"
   }
 }

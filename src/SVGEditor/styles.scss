@@ -1,0 +1,58 @@
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.button {
+    width: max-content;
+}
+.App {
+    font-family: sans-serif;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+    padding: 100px 16px;
+    background-color: var(--gray-200);
+    min-height: 100vh;
+    height: 100%;
+}
+#canvas {
+    border: 1px solid var(--border-neutral-subtle);
+    z-index: 2;
+}
+.lower-canvas {
+    position: initial !important;
+}
+.Toolbar {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background-color: var(--background-neutral-container);
+    padding: 8px 8px;
+    border-radius: 4px;
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 16px;
+    &:empty {
+        display: none;
+    }
+}
+.Settings {
+    position: fixed;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    gap: 8px;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--background-neutral-container);
+    padding: 24px 8px;
+    border-radius: 4px;
+    text-align: left;
+    &:empty {
+        padding: 0;
+    }
+}
