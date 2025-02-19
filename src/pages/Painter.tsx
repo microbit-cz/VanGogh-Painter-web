@@ -9,7 +9,7 @@ import {PainterContext} from "../providers/PainterProvider.tsx";
 import {useNavigate} from "react-router-dom";
 
 export const Painter: FC = () => {
-    const { state, dispatch, currentSVG } = useContext(PainterContext);
+    const { state, dispatch, unprocessedSVG } = useContext(PainterContext);
     const navigate = useNavigate();
     const indicatorRef = useRef<HTMLDivElement>(null);
     const [isIndicatorActive, setIsIndicatorActive] = useState(false);
@@ -49,7 +49,7 @@ export const Painter: FC = () => {
                     <div className={Styles["painter__displayContainer"]}>
                         <div ref={indicatorRef} className={Styles["indicator"]} style={{ display: isIndicatorActive ? 'block' : 'none' }}></div>
                         <div className={Styles["painter__display"]}>
-                            <div style={{ transform: `scale(${scale})`, transformOrigin: 'top left' }} dangerouslySetInnerHTML={{__html: currentSVG?.outerHTML ?? ""}}></div>
+                            <div style={{ transform: `scale(${scale})`, transformOrigin: 'top left' }} dangerouslySetInnerHTML={{__html: unprocessedSVG?.outerHTML ?? ""}}></div>
                         </div>
                     </div>
                 </div>

@@ -1,6 +1,6 @@
-import {Circle, Rect} from "fabric";
+import {Circle, Line, Rect, Triangle} from "fabric";
 import {IconButton} from "blocksin-system";
-import {CircleIcon, SquareIcon} from "sebikostudio-icons";
+import {CircleIcon, MinusIcon, SquareIcon, TriangleIcon} from "sebikostudio-icons";
 import React from "react";
 
 function AddElements({ canvas }) {
@@ -11,12 +11,23 @@ function AddElements({ canvas }) {
                 left: 50,
                 width: 100,
                 height: 60,
-                fill: "#D84D42",
             });
 
             canvas.add(rect);
         }
     };
+
+    const addTriangle = () => {
+        if (canvas) {
+            const triangle = new Triangle({
+                top: 100,
+                left: 50,
+                radius: 50,
+            });
+
+            canvas.add(triangle);
+        }
+    }
 
     const addCircle = () => {
         if (canvas) {
@@ -24,10 +35,21 @@ function AddElements({ canvas }) {
                 top: 100,
                 left: 50,
                 radius: 50,
-                fill: "#42D8A4",
             });
 
             canvas.add(circle);
+        }
+    }
+
+    const addLine = () => {
+        if (canvas) {
+            const line = new Line({
+                top: 100,
+                left: 50,
+                radius: 50,
+            });
+
+            canvas.add(line);
         }
     }
 
@@ -36,8 +58,14 @@ function AddElements({ canvas }) {
             <IconButton onClick={addRectangle} variant="ghost" size="medium">
                 <SquareIcon/>
             </IconButton>
+            <IconButton onClick={addTriangle} variant="ghost" size="medium">
+                <TriangleIcon/>
+            </IconButton>
             <IconButton onClick={addCircle} variant="ghost" size="medium">
                 <CircleIcon/>
+            </IconButton>
+            <IconButton onClick={addLine} variant="ghost" size="medium">
+                <MinusIcon/>
             </IconButton>
         </div>
     );

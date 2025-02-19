@@ -10,6 +10,8 @@ type PainterState = {
 interface IPainterContext {
     state: PainterState;
     dispatch: (action: Action) => void;
+    unprocessedSVG: SVGSVGElement | null;
+    setUnprocessedSVG: (svg: SVGSVGElement) => void;
     currentSVG: string[] | null;
     setCurrentSVG: (svg: string[]) => void;
 }
@@ -53,9 +55,10 @@ export const PainterContext = createContext<IPainterContext>({} as IPainterConte
 export const PainterProvider: FC<PropsWithChildren> = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
     const [currentSVG, setCurrentSVG] = useState<string[] | null>(null);
+    const [unprocessedSVG, setUnprocessedSVG] = useState<SVGSVGElement | null>(null);
 
     return (
-        <PainterContext.Provider value={{ state, dispatch, currentSVG, setCurrentSVG }}>
+        <PainterContext.Provider value={{ state, dispatch, unprocessedSVG, setUnprocessedSVG, currentSVG, setCurrentSVG }}>
             {children}
         </PainterContext.Provider>
     );

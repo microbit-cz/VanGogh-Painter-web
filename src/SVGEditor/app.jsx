@@ -1,55 +1,56 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Canvas } from "fabric";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import * as fabric from "fabric";
 import "./styles.scss";
 import AddElements from "./AddElements";
 import Settings from "./Settings";
 import CanvasSettings from "./CanvasSettings";
 import { handleObjectMoving, clearGuidelines } from "./SnappingHelpers.jsx";
+import { PainterContext } from "../providers/PainterProvider.js";
 
 function CanvasApp() {
     const canvasRef = useRef(null);
     const [canvas, setCanvas] = useState(null);
     const [guidelines, setGuidelines] = useState([]);
-
-    // Sample SVG string (you can replace this with your own SVG)
-    const sampleSVG = `
-        <svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="50" cy="50" r="40" stroke="black" stroke-width="2" fill="red" />
-        </svg>
-    `;
+    const { currentSVG, unprocessedSVG } = useContext(PainterContext);
+    const unprocessedSVGstr = unprocessedSVG || "";
 
     useEffect(() => {
-        if (canvasRef.current) {
-            const initCanvas = new Canvas(canvasRef.current, {
-                width: 500,
-                height: 500,
-            });
+        if (!canvasRef.current) return; // Ensure the ref is available
 
-            initCanvas.backgroundColor = "#fff";
-            initCanvas.renderAll();
+        // Prevent re-initializing if a canvas already exists
+        if (canvas) {
+            return;
+        }
 
-            setCanvas(initCanvas);
+        const initCanvas = new fabric.Canvas(canvasRef.current, {
+            width: 500,
+            height: 500,
+            backgroundColor: "#fff",
+        });
 
-            initCanvas.on("object:moving", (event) =>
-                handleObjectMoving(initCanvas, event.target, guidelines, setGuidelines)
-            );
+        setCanvas(initCanvas);
 
-            initCanvas.on("object:modified", () =>
-                clearGuidelines(initCanvas, guidelines, setGuidelines)
-            );
+        initCanvas.on("object:moving", (event) =>
+            handleObjectMoving(initCanvas, event.target, guidelines, setGuidelines)
+        );
 
-            // Automatically load the SVG when the component mounts
-            initCanvas.loadSVGFromString(sampleSVG, (objects, options) => {
+        initCanvas.on("object:modified", () =>
+            clearGuidelines(initCanvas, guidelines, setGuidelines)
+        );
+
+        if (currentSVG) {
+            fabric.loadSVGFromString(unprocessedSVGstr, (objects, options) => {
                 const obj = fabric.util.groupSVGElements(objects, options);
                 initCanvas.add(obj);
                 initCanvas.renderAll();
             });
-
-            return () => {
-                initCanvas.dispose();
-            };
         }
-    }, []);
+
+        return () => {
+            initCanvas.dispose(); // Cleanup on unmount
+            setCanvas(null); // Reset state
+        };
+    }, [currentSVG]); // Re-run only when `currentSVG` changes
 
     const exportSVG = () => {
         if (canvas) {

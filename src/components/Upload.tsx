@@ -6,29 +6,30 @@ import { useNavigate } from "react-router-dom";
 import {shapeToPath, ShapeTypes} from "svg-path-commander";
 
 export const Upload: FC = () => {
-    const { setCurrentSVG, currentSVG } = useContext(PainterContext);
+    const { setCurrentSVG, setUnprocessedSVG } = useContext(PainterContext);
     const navigate = useNavigate();
 
     const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file?.type === 'image/svg+xml') {
             const reader = new FileReader();
-            reader.onload = handleFileLoad;
+            reader.onload = handleFileLoad; // Set the onload handler to process the file
             reader.onerror = () => console.error('Error reading the SVG file');
-            reader.readAsText(file);
-            navigate("/Painter");
+            reader.readAsText(file); // Read the file as text
+            navigate("/Painter"); // Navigate to the Painter page
         }
     };
 
     const handleFileLoad = (e: ProgressEvent<FileReader>) => {
         try {
-            const svgContent = e.target?.result as string;
+            const svgContent = e.target?.result as string; // Get the SVG content as a string
             const svgElement = new DOMParser().parseFromString(svgContent, "image/svg+xml").querySelector('svg');
-
             if (svgElement) {
-                const pathDataList = extractPathData(svgElement);
-                setCurrentSVG(pathDataList);
-                console.log('SVG file uploaded:', pathDataList);
+                // Save the unprocessed SVG content
+                setUnprocessedSVG(svgElement); // Store the SVG content in unprocessedSVG
+                console.log('SVG file uploaded:', svgElement); // Log the uploaded SVG content
+                const pathDataList = extractPathData(svgElement); // Extract path data from the SVG
+                setCurrentSVG(pathDataList); // Set the current SVG path data
             } else {
                 console.error('No SVG element found in the uploaded file');
             }
@@ -36,6 +37,7 @@ export const Upload: FC = () => {
             console.error('Error processing SVG:', error);
         }
     };
+
 
     const extractPathData = (svgElement: SVGSVGElement): string[] => {
         const pathData: string[] = [];
