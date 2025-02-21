@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import {shapeToPath, ShapeTypes} from "svg-path-commander";
 
 export const Upload: FC = () => {
-    const { setCurrentSVG, setUnprocessedSVG } = useContext(PainterContext);
+    const { setCurrentSVG, setUnprocessedSVG, setUnprocessedSVGstr } = useContext(PainterContext);
     const navigate = useNavigate();
 
     const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,6 +27,7 @@ export const Upload: FC = () => {
             if (svgElement) {
                 // Save the unprocessed SVG content
                 setUnprocessedSVG(svgElement); // Store the SVG content in unprocessedSVG
+                setUnprocessedSVGstr(svgContent); // Store the SVG content as a string
                 console.log('SVG file uploaded:', svgElement); // Log the uploaded SVG content
                 const pathDataList = extractPathData(svgElement); // Extract path data from the SVG
                 setCurrentSVG(pathDataList); // Set the current SVG path data

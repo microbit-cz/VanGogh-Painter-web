@@ -11,16 +11,10 @@ function CanvasApp() {
     const canvasRef = useRef(null);
     const [canvas, setCanvas] = useState(null);
     const [guidelines, setGuidelines] = useState([]);
-    const { currentSVG, unprocessedSVG } = useContext(PainterContext);
-    const unprocessedSVGstr = unprocessedSVG || "";
+    const { currentSVG, unprocessedSVGstr } = useContext(PainterContext);
 
     useEffect(() => {
         if (!canvasRef.current) return; // Ensure the ref is available
-
-        // Prevent re-initializing if a canvas already exists
-        if (canvas) {
-            return;
-        }
 
         const initCanvas = new fabric.Canvas(canvasRef.current, {
             width: 500,
@@ -38,19 +32,21 @@ function CanvasApp() {
             clearGuidelines(initCanvas, guidelines, setGuidelines)
         );
 
-        if (currentSVG) {
-            fabric.loadSVGFromString(unprocessedSVGstr, (objects, options) => {
-                const obj = fabric.util.groupSVGElements(objects, options);
-                initCanvas.add(obj);
-                initCanvas.renderAll();
-            });
-        }
-
         return () => {
             initCanvas.dispose(); // Cleanup on unmount
             setCanvas(null); // Reset state
         };
-    }, [currentSVG]); // Re-run only when `currentSVG` changes
+    }, []); // Run only once on mount
+
+    useEffect(() => {
+        if (canvas && currentSVG) {
+            fabric.loadSVGFromString(unprocessedSVGstr, (objects, options) => {
+                const obj = fabric.util.groupSVGElements(objects, options);
+                canvas.add(obj);
+                canvas.renderAll();
+            });
+        }
+    }, [canvas, currentSVG]); // Re-run when `canvas` or `currentSVG` changes
 
     const exportSVG = () => {
         if (canvas) {
@@ -71,12 +67,12 @@ function CanvasApp() {
         <div className="App">
             <div className="Toolbar darkmode">
                 <AddElements canvas={canvas} />
-                <button onClick={exportSVG}>Export SVG</button>
             </div>
             <canvas id="canvas" ref={canvasRef} />
             <div>
                 <Settings canvas={canvas} />
                 <CanvasSettings canvas={canvas} />
+                <button onClick={exportSVG}>Export SVG</button>
             </div>
         </div>
     );
