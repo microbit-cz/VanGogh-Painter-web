@@ -11,6 +11,8 @@ function AddElements({ canvas }) {
                 left: 50,
                 width: 100,
                 height: 60,
+                fill: "",
+                stroke: "black"
             });
 
             canvas.add(rect);
@@ -23,6 +25,8 @@ function AddElements({ canvas }) {
                 top: 100,
                 left: 50,
                 radius: 50,
+                fill: "",
+                stroke: "black"
             });
 
             canvas.add(triangle);
@@ -35,6 +39,8 @@ function AddElements({ canvas }) {
                 top: 100,
                 left: 50,
                 radius: 50,
+                fill: "",
+                stroke: "black"
             });
 
             canvas.add(circle);
@@ -43,10 +49,8 @@ function AddElements({ canvas }) {
 
     const addLine = () => {
         if (canvas) {
-            const line = new Line({
-                top: 100,
-                left: 50,
-                radius: 50,
+            const line = new Line([0, 0, 100, 100], {
+            stroke: "black"
             });
 
             canvas.add(line);

@@ -1,6 +1,5 @@
 import { Line } from "fabric";
 
-
 const snappingDistance = 10;
 
 export const handleObjectMoving = (canvas, obj, guidelines, setGuidelines) => {
@@ -79,7 +78,7 @@ export const handleObjectMoving = (canvas, obj, guidelines, setGuidelines) => {
 
 export const createVerticalGuideline = (canvas, x, id) => {
     return new Line([x, 0, x, canvas.height], {
-        id,
+        id: id || "", // Ensure id is always a string
         stroke: "red",
         strokeWidth: 1,
         selectable: false,
@@ -91,7 +90,7 @@ export const createVerticalGuideline = (canvas, x, id) => {
 
 export const createHorizontalGuideline = (canvas, y, id) => {
     return new Line([0, y, canvas.width, y], {
-        id,
+        id: id || "", // Ensure id is always a string
         stroke: "red",
         strokeWidth: 1,
         selectable: false,
@@ -104,7 +103,8 @@ export const createHorizontalGuideline = (canvas, y, id) => {
 export const clearGuidelines = (canvas) => {
     const objects = canvas.getObjects("line");
     objects.forEach((obj) => {
-        if (obj.id && obj.id.startsWith("vertical-") || obj.id.startsWith("horizontal-")) {
+        // Ensure obj.id is defined before calling startsWith
+        if (obj.id && (obj.id.startsWith("vertical-") || obj.id.startsWith("horizontal-"))) {
             canvas.remove(obj);
         }
     });
@@ -113,5 +113,5 @@ export const clearGuidelines = (canvas) => {
 
 const guidelineExists = (canvas, id) => {
     const objects = canvas.getObjects("line");
-    return objects.some((obj) => obj.id === id);
+    return objects.some((obj) => obj.id === id); // Only compare if obj.id exists
 };

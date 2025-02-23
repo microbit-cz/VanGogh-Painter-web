@@ -1,28 +1,42 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import * as fabric from "fabric";
 import "./styles.scss";
 import AddElements from "./AddElements";
 import Settings from "./Settings";
 import CanvasSettings from "./CanvasSettings";
-import { handleObjectMoving, clearGuidelines } from "./SnappingHelpers.jsx";
-import { PainterContext } from "../providers/PainterProvider.js";
+import {handleObjectMoving, clearGuidelines} from "./SnappingHelpers.jsx";
+import {loadSVGFromString, util} from "fabric";
+import {useNavigate} from "react-router-dom";
 
-function CanvasApp() {
+function CanvasApp({svgData}) {
     const canvasRef = useRef(null);
     const [canvas, setCanvas] = useState(null);
     const [guidelines, setGuidelines] = useState([]);
-    const { currentSVG, unprocessedSVGstr } = useContext(PainterContext);
+    const navigate = useNavigate();
+    const [lock, setLock] = useState(false); // Used to lock the useEffect during init
 
     useEffect(() => {
-        if (!canvasRef.current) return; // Ensure the ref is available
+        if (!canvasRef.current || canvas || lock) return; // Ensure the ref is available
+        setLock(true);
+        if (!svgData) {
+            navigate("/");
+        }
 
         const initCanvas = new fabric.Canvas(canvasRef.current, {
             width: 500,
             height: 500,
             backgroundColor: "#fff",
-        });
+        })
 
         setCanvas(initCanvas);
+
+        loadSVGFromString(svgData).then((loadedSvg) => {
+            const group = util.groupSVGElements(loadedSvg.objects, loadedSvg.options);
+            group.scaleToHeight(500);
+            group.scaleToWidth(500);
+            initCanvas.add(group);
+            initCanvas.renderAll();
+        })
 
         initCanvas.on("object:moving", (event) =>
             handleObjectMoving(initCanvas, event.target, guidelines, setGuidelines)
@@ -32,26 +46,18 @@ function CanvasApp() {
             clearGuidelines(initCanvas, guidelines, setGuidelines)
         );
 
+        setLock(false);
+
         return () => {
-            initCanvas.dispose(); // Cleanup on unmount
-            setCanvas(null); // Reset state
+            initCanvas.dispose();
+            setCanvas(null);
         };
     }, []); // Run only once on mount
-
-    useEffect(() => {
-        if (canvas && currentSVG) {
-            fabric.loadSVGFromString(unprocessedSVGstr, (objects, options) => {
-                const obj = fabric.util.groupSVGElements(objects, options);
-                canvas.add(obj);
-                canvas.renderAll();
-            });
-        }
-    }, [canvas, currentSVG]); // Re-run when `canvas` or `currentSVG` changes
 
     const exportSVG = () => {
         if (canvas) {
             const svg = canvas.toSVG();
-            const blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
+            const blob = new Blob([svg], {type: "image/svg+xml;charset=utf-8"});
             const url = URL.createObjectURL(blob);
             const a = document.createElement("a");
             a.href = url;
@@ -66,12 +72,12 @@ function CanvasApp() {
     return (
         <div className="App">
             <div className="Toolbar darkmode">
-                <AddElements canvas={canvas} />
+                <AddElements canvas={canvas}/>
             </div>
-            <canvas id="canvas" ref={canvasRef} />
+            <canvas id="canvas" ref={canvasRef}/>
             <div>
-                <Settings canvas={canvas} />
-                <CanvasSettings canvas={canvas} />
+                <Settings canvas={canvas}/>
+                <CanvasSettings canvas={canvas}/>
                 <button onClick={exportSVG}>Export SVG</button>
             </div>
         </div>
