@@ -44,6 +44,8 @@ export const Painter: FC = () => {
                 if (detail.startsWith("%dr")) {
                     const x = (parseInt(detail.slice(3)) / (input.length + 2)) * 100;
                     console.log(`Drawing ${Math.round(x)}`);
+                    console.log(detail.slice(3) - 1);
+                    console.log(detail.slice(3));
                     setProgress(x);
                 }
 
