@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import * as fabric from "fabric";
 import "./styles.scss";
 import AddElements from "./AddElements";
@@ -7,13 +7,16 @@ import CanvasSettings from "./CanvasSettings";
 import {handleObjectMoving, clearGuidelines} from "./SnappingHelpers.jsx";
 import {loadSVGFromString, util} from "fabric";
 import {useNavigate} from "react-router-dom";
+import {shapeToPath} from "svg-path-commander";
+import {PainterContext} from "../providers/PainterProvider.tsx";
 
-function CanvasApp({svgData}) {
+function CanvasApp({svgData, save}) {
     const canvasRef = useRef(null);
     const [canvas, setCanvas] = useState(null);
     const [guidelines, setGuidelines] = useState([]);
     const navigate = useNavigate();
     const [lock, setLock] = useState(false); // Used to lock the useEffect during init
+    const {canvasRef: globalCanvasRef} = useContext(PainterContext);
 
     useEffect(() => {
         if (!canvasRef.current || canvas || lock) return; // Ensure the ref is available
@@ -29,6 +32,7 @@ function CanvasApp({svgData}) {
         })
 
         setCanvas(initCanvas);
+        globalCanvasRef.current = initCanvas;
 
         loadSVGFromString(svgData).then((loadedSvg) => {
             const group = util.groupSVGElements(loadedSvg.objects, loadedSvg.options);

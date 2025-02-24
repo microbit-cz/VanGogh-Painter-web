@@ -3,7 +3,7 @@ import Styles from "./Upload.module.css";
 import { FC, useContext } from "react";
 import { PainterContext } from "../providers/PainterProvider.tsx";
 import { useNavigate } from "react-router-dom";
-import {shapeToPath, ShapeTypes} from "svg-path-commander";
+import {extractPathData} from "../utils.ts";
 
 export const Upload: FC = () => {
     const { setCurrentSVG, setUnprocessedSVG, setUnprocessedSVGstr } = useContext(PainterContext);
@@ -37,26 +37,6 @@ export const Upload: FC = () => {
         } catch (error) {
             console.error('Error processing SVG:', error);
         }
-    };
-
-
-    const extractPathData = (svgElement: SVGSVGElement): string[] => {
-        const pathData: string[] = [];
-
-        // Convert all shapes to paths and extract 'd' attributes
-        const shapes = svgElement.querySelectorAll('rect, circle, ellipse, line, polyline, polygon');
-        shapes.forEach(shape => {
-            const svgShape = shape as unknown as ShapeTypes; // Explicitly cast to ShapeTypes
-            const path = shapeToPath(svgShape);
-            if (path) {
-                const d = path.getAttribute('d');
-                if (d) {
-                    pathData.push(d);
-                }
-            }
-        });
-
-        return pathData;
     };
 
     const triggerFileInput = () => {

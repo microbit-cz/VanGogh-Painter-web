@@ -1,4 +1,5 @@
-import {createContext, useState, FC, PropsWithChildren, useReducer} from 'react';
+import {createContext, useState, FC, PropsWithChildren, useReducer, useRef, RefObject} from 'react';
+import {Canvas} from "fabric";
 
 type PainterState = {
     connStatus: boolean;
@@ -16,6 +17,7 @@ interface IPainterContext {
     setUnprocessedSVGstr: (svg: string) => void;
     currentSVG: string[] | null;
     setCurrentSVG: (svg: string[]) => void;
+    canvasRef: RefObject<Canvas>;
 }
 
 type Action =
@@ -59,9 +61,10 @@ export const PainterProvider: FC<PropsWithChildren> = ({ children }) => {
     const [currentSVG, setCurrentSVG] = useState<string[] | null>(null);
     const [unprocessedSVG, setUnprocessedSVG] = useState<SVGSVGElement | null>(null);
     const [unprocessedSVGstr, setUnprocessedSVGstr] = useState<string | null>(null);
+    const canvasRef = useRef(null);
 
     return (
-        <PainterContext.Provider value={{ state, dispatch, unprocessedSVG, setUnprocessedSVG, unprocessedSVGstr, setUnprocessedSVGstr, currentSVG, setCurrentSVG }}>
+        <PainterContext.Provider value={{ state, dispatch, unprocessedSVG, setUnprocessedSVG, unprocessedSVGstr, setUnprocessedSVGstr, currentSVG, setCurrentSVG, canvasRef }}>
             {children}
         </PainterContext.Provider>
     );

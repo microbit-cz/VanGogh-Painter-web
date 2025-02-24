@@ -11,19 +11,19 @@ export const ScaleSetting: FC<ScaleSettingProps> = ({ onScaleChange }) => {
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newScale = Math.round(parseFloat(event.target.value) * 10) / 10;
-        setScale(newScale);
+        setScale(Math.round(newScale*10)/10);
         onScaleChange(newScale);
     };
 
     const handleIncrease = () => {
         const newScale = Math.min(scale + 0.1, 10);
-        setScale(newScale);
+        setScale(Math.round(newScale*10)/10);
         onScaleChange(newScale);
     };
 
     const handleDecrease = () => {
         const newScale = Math.max(scale - 0.1, 0.1);
-        setScale(newScale);
+        setScale(Math.round(newScale*10)/10);
         onScaleChange(newScale);
     };
 
