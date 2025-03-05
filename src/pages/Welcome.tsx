@@ -7,21 +7,11 @@ import {Status} from "../components/Status.tsx";
 import {useNavigate} from "react-router-dom";
 import {PainterContext} from "../providers/PainterProvider.tsx";
 import {microbitStore} from "../stores/main.ts";
-/*
-const drawState = reactive({
-    h: 0,
-    clr: 'rgb(206, 12, 12)',
-    txt: 'Waiting for upload'
-})
-let itCnt = 0
 
-const output = ref('')
-*/
 export const Welcome: FC = () => {
     const { dispatch } = useContext(PainterContext);
     const navigate = useNavigate();
     const [device, setDevice] = useState<BluetoothDevice | null>(null);
-    //let input: [] = []
 
 
 
@@ -50,26 +40,7 @@ export const Welcome: FC = () => {
             navigate("/upload");
         }
     }
-/*
-    const sendout () => {
-        let textOut = '['
-        input.forEach((x) => (textOut += `[${x[0]}, ${x[1]}],`))
-        textOut += '[4,0]]'
-        if (service) {
-            let sendText = '%' + textOut + '%'
-            console.log(sendText)
-            drawState.txt = 'Uploading'
-            itCnt = Math.ceil(sendText.length / 14)
-            for (let i = 0; i < sendText.length; i += 14) {
-                console.log(sendText.slice(i, i + 14) + '$')
-                service.sendText(sendText.slice(i, i + 14) + '$')
-            }
-        }
-        navigator.clipboard.writeText(textOut)
-        output.value = textOut
-        alert(textOut)
-    }
-*/
+
     return (
         <>
             <Header />
