@@ -7,10 +7,12 @@
     display: flex;
     flex-direction: column;
 }
+
 .painter__section.right {
     margin: 0;
     justify-content: space-between;
 }
+
 .painter__section.left {
     width: 100%;
     margin-right: 1em;
@@ -22,6 +24,7 @@
 }
 
 .painter__display {
+    position: relative;
     height: 100%;
     background-color: #fff;
     align-self: center;
@@ -82,10 +85,12 @@
     border-radius: .5em;
     background-color: var(--primary);
 }
+
 .painter__bar::-webkit-progress-value {
     border-radius: .5em;
     background-color: var(--secondary);
 }
+
 .painter__bar::-moz-progress-bar {
     border-radius: .5em;
     background-color: var(--secondary);
@@ -99,17 +104,18 @@
         margin: .5em;
     }
 
-    .painter__section{
+    .painter__section {
         width: calc(100% - 2em);
     }
 
-    .painter__section.left{
+    .painter__section.left {
         margin: 0;
     }
 
     .painter__section.right {
         gap: 1em;
     }
+
     .painter__display {
         height: 50vh;
         align-self: center;
@@ -119,7 +125,88 @@
         gap: .5em;
         grid-template-columns: 1fr 1fr
     }
+
     .painter__buttonContainer button:first-of-type {
         grid-column: span 2;
+    }
+}
+
+.canvasinner {
+    position: absolute;
+    z-index: 100000;
+    /*top: 20vh;
+    left: 50%;*/
+}
+
+.line {
+    z-index: 100;
+    position: absolute;
+    height: 5px;
+    cursor: pointer;
+    transform-origin: top left;
+    border-radius: 50px;
+
+    &.pendown {
+        background: #000;
+
+        &:hover {
+            background: rgb(206, 12, 12);
+        }
+    }
+
+    &.penup {
+        background: rgba(0, 0, 0, 0.15);
+
+        &:hover {
+            background: rgb(206, 122, 12);
+        }
+    }
+
+    &.dactive {
+        background-color: rgb(43, 179, 9);
+        z-index: 100000;
+    }
+}
+
+.angle {
+    z-index: 105;
+    font-size: 2rem;
+    transform-origin: top left;
+    position: absolute;
+    color: rgb(12, 73, 206);
+    display: block;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid #fff;
+    border-radius: 50px;
+    cursor: pointer;
+
+    &:hover {
+        color: rgb(7, 38, 104);
+        background: #fff;
+    }
+
+    &.dactive {
+        background-color: rgb(43, 179, 9);
+        z-index: 100000;
+    }
+}
+
+.angledot {
+    z-index: 110;
+    position: absolute;
+    background: rgb(12, 73, 206);
+    cursor: pointer;
+    display: block;
+    width: 15px;
+    height: 15px;
+    margin: -7.5px 0 0 -7.5px;
+    border-radius: 50px;
+
+    &:hover {
+        background: rgb(7, 38, 104);
+    }
+
+    &.dactive {
+        background-color: rgb(31, 129, 7);
     }
 }
