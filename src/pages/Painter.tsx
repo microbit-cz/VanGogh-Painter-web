@@ -6,9 +6,9 @@ import Styles from "./Painter.module.css";
 import {Status} from "../components/Status.tsx";
 import {PainterContext} from "../providers/PainterProvider.tsx";
 import {useNavigate} from "react-router-dom";
-import {main} from "../converter.ts";
 import {microbitStore} from "../stores/main.ts";
 import {extractPathData} from "../utils.ts";
+import {main} from "../converter";
 
 interface Angle {
     val: string
@@ -36,7 +36,6 @@ function calc(input: number[][]): [Angle[], Line[]] {
             anglesum -= x[1]
         }
     })
-    console.log(anglesum)
 
     const coords: number[] = [0, 0]
     let angle: number = 0
@@ -162,11 +161,11 @@ export const Painter: FC = () => {
         try {
             // Process each path and insert extra commands between them
             const outputCommands: number[][] = [];
-            currentSVG.forEach((d) => {
-                // Get the output commands for this path
-                const cmds = main(d);
-                outputCommands.push(...cmds);
-            });
+
+            // Get the output commands for this path
+            const cmds = main(currentSVG.join(" "));
+            outputCommands.push(...cmds);
+
             // Append the final [4,0] command.
             outputCommands.push([4, 0]);
 
@@ -395,7 +394,7 @@ export const Painter: FC = () => {
                         <ScaleSetting onScaleChange={handleScaleChange}/>
                         <input type={"range"} min={.1} max={30} defaultValue={zoom} onChange={e => {
                             setZoom(parseInt(e.target.value));
-                        }} />
+                        }}/>
                     </div>
                     <div className={Styles["painter__buttonContainer"]}>
                         <button className={"btn"} onClick={handleStartPause}>{!state.isPaused ? "Pause" : "Start"}<Icon

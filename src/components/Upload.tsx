@@ -1,12 +1,12 @@
-import { Icon, IconVariant } from "./Icon.tsx";
+import {Icon, IconVariant} from "./Icon.tsx";
 import Styles from "./Upload.module.css";
-import { FC, useContext } from "react";
-import { PainterContext } from "../providers/PainterProvider.tsx";
-import { useNavigate } from "react-router-dom";
+import {FC, useContext} from "react";
+import {PainterContext} from "../providers/PainterProvider.tsx";
+import {useNavigate} from "react-router-dom";
 import {extractPathData} from "../utils.ts";
 
 export const Upload: FC = () => {
-    const { setCurrentSVG, setUnprocessedSVG, setUnprocessedSVGstr } = useContext(PainterContext);
+    const {setCurrentSVG, setUnprocessedSVG, setUnprocessedSVGstr} = useContext(PainterContext);
     const navigate = useNavigate();
 
     const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,22 +23,26 @@ export const Upload: FC = () => {
     const handleFileLoad = (e: ProgressEvent<FileReader>) => {
         try {
             const svgContent = e.target?.result as string; // Get the SVG content as a string
-            const svgElement = new DOMParser().parseFromString(svgContent, "image/svg+xml").querySelector('svg');
+            const svgElement = new DOMParser()
+                .parseFromString(svgContent, "image/svg+xml")
+                .querySelector("svg");
+
             if (svgElement) {
                 // Save the unprocessed SVG content
                 setUnprocessedSVG(svgElement); // Store the SVG content in unprocessedSVG
                 setUnprocessedSVGstr(svgContent); // Store the SVG content as a string
-                console.log('SVG file uploaded:', svgElement); // Log the uploaded SVG content
-                const pathDataList = extractPathData(svgElement); // Extract path data from the SVG
+                console.log("SVG file uploaded:", svgElement);
+
+                // Use the modified svgElement as the flattened SVG
+                const pathDataList = extractPathData(svgElement);
                 setCurrentSVG(pathDataList); // Set the current SVG path data
             } else {
-                console.error('No SVG element found in the uploaded file');
+                console.error("No SVG element found in the uploaded file");
             }
         } catch (error) {
-            console.error('Error processing SVG:', error);
+            console.error("Error processing SVG:", error);
         }
     };
-
     const triggerFileInput = () => {
         const inputElement = document.querySelector(`.${Styles["upload__fileContainer__input"]}`) as HTMLInputElement | null;
         inputElement?.click();
@@ -47,8 +51,9 @@ export const Upload: FC = () => {
     return (
         <div className={Styles["upload__container"]} onClick={triggerFileInput}>
             <p className={Styles["upload__title"]}>Click or drag here to upload SVG file</p>
-            <Icon variant={IconVariant.UPLOAD} size={15} />
-            <input className={Styles["upload__fileContainer__input"]} type="file" accept="image/svg+xml" onChange={handleFileUpload} />
+            <Icon variant={IconVariant.UPLOAD} size={15}/>
+            <input className={Styles["upload__fileContainer__input"]} type="file" accept="image/svg+xml"
+                   onChange={handleFileUpload}/>
         </div>
     );
 };
