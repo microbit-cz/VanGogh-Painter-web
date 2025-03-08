@@ -220,19 +220,302 @@ function ellipticalArc(rx, ry, xAxisRotation, largeArcFlag, sweepFlag, x, y, cur
     return res; // Return the array of points representing the arc
 }
 
-function formatted(output, angle) {
-    let textOut = "[";
+function separatePathByM(pathString) {
+    // Split on both "M" and "m" since a new subpath begins with them.
+    return pathString
+        .split(/(?=[Mm])/)
+        .map((seg) => seg.trim())
+        .filter((seg) => seg.length > 0);
+}
 
-    if (angle !== -1) {
-        textOut += "[3, " +  angle.toString() + "],"
+function tokenizePath(segment) {
+    // Replace commas with spaces to simplify splitting numbers.
+    const cleaned = segment.replace(/,/g, " ");
+    const regex = /[MmLlHhVvZz]|[-+]?\d*\.?\d+(?:e[-+]?\d+)?/g;
+    const tokens = cleaned.match(regex);
+    return tokens ? tokens : [];
+}
+
+function computeSegmentCoordinates(segment) {
+    const tokens = tokenizePath(segment);
+    if (tokens.length === 0) {
+        throw new Error("Empty segment");
+    }
+    let currX = 0,
+        currY = 0;
+    let start = null;
+    let currentCmd = "";
+    let i = 0;
+
+    while (i < tokens.length) {
+        const token = tokens[i];
+        if (/[MmLlHhVvZz]/.test(token)) {
+            currentCmd = token;
+            i++;
+            if (currentCmd === "Z" || currentCmd === "z") {
+                // Closepath: return to starting point.
+                if (start) {
+                    currX = start.x;
+                    currY = start.y;
+                }
+                continue;
+            }
+        }
+        switch (currentCmd) {
+            case "M":
+            case "m": {
+                if (i + 1 >= tokens.length) {
+                    throw new Error("Not enough parameters for M command");
+                }
+                const x = parseFloat(tokens[i++]);
+                const y = parseFloat(tokens[i++]);
+                if (!start) {
+                    // The first moveto is always treated as absolute.
+                    currX = x;
+                    currY = y;
+                    start = { x: currX, y: currY };
+                } else {
+                    if (currentCmd === "m") {
+                        currX += x;
+                        currY += y;
+                    } else {
+                        currX = x;
+                        currY = y;
+                    }
+                }
+                // Implicit lineto if extra coordinates follow.
+                currentCmd = currentCmd === "M" ? "L" : "l";
+                break;
+            }
+            case "L":
+            case "l": {
+                if (i + 1 >= tokens.length) {
+                    throw new Error("Not enough parameters for L command");
+                }
+                const x = parseFloat(tokens[i++]);
+                const y = parseFloat(tokens[i++]);
+                if (currentCmd === "l") {
+                    currX += x;
+                    currY += y;
+                } else {
+                    currX = x;
+                    currY = y;
+                }
+                break;
+            }
+            case "H":
+            case "h": {
+                if (i >= tokens.length) {
+                    throw new Error("Not enough parameters for H command");
+                }
+                const x = parseFloat(tokens[i++]);
+                if (currentCmd === "h") {
+                    currX += x;
+                } else {
+                    currX = x;
+                }
+                break;
+            }
+            case "V":
+            case "v": {
+                if (i >= tokens.length) {
+                    throw new Error("Not enough parameters for V command");
+                }
+                const y = parseFloat(tokens[i++]);
+                if (currentCmd === "v") {
+                    currY += y;
+                } else {
+                    currY = y;
+                }
+                break;
+            }
+            default: {
+                throw new Error("Unsupported command: " + currentCmd);
+            }
+        }
+    }
+    if (!start) {
+        throw new Error("No starting point found in segment");
+    }
+    return { start, end: { x: currX, y: currY } };
+}
+
+function parseSegment(segment) {
+    const { start, end } = computeSegmentCoordinates(segment);
+    return { segment, start, end };
+}
+
+function distanceBetween(p1, p2) {
+    return Math.hypot(p2.x - p1.x, p2.y - p1.y);
+}
+
+function rearrangeSegments(segments) {
+    if (segments.length === 0) return [];
+    const remaining = segments.slice();
+    const arranged = [];
+
+    let current = remaining.shift();
+    arranged.push(current);
+
+    while (remaining.length > 0) {
+        let closestIndex = 0;
+        let minDist = Infinity;
+
+        for (let i = 0; i < remaining.length; i++) {
+            const d = distanceBetween(current.end, remaining[i].start);
+            if (d < minDist) {
+                minDist = d;
+                closestIndex = i;
+            }
+        }
+        current = remaining.splice(closestIndex, 1)[0];
+        arranged.push(current);
+    }
+    return arranged;
+}
+
+function optimizeSvgPath(pathString) {
+    // 1. Separate the path into segments based on moveto commands.
+    const segmentsStr = separatePathByM(pathString);
+
+    // 2. Parse each segment to compute its actual start and end coordinates.
+    const segments = segmentsStr.map(parseSegment);
+
+    // 3. Rearrange the segments using a nearest-neighbor approach.
+    const orderedSegments = rearrangeSegments(segments);
+
+    // 4. Rebuild the path string.
+    return orderedSegments.map((seg) => seg.segment).join(" ");
+}
+
+function normalizeSVGPath(path) {
+    // Regular expression to match command letters and numbers.
+    const regex = /[a-zA-Z]|-?\d*\.?\d+(?:e[-+]?\d+)?/g;
+    let tokens = [];
+    let match;
+    while ((match = regex.exec(path)) !== null) {
+        tokens.push(match[0]);
+    }
+    if (tokens.length === 0) return path;
+
+    // Parse tokens into an array of { command, params } objects.
+    const commands = [];
+    const isCommand = (t) => /^[a-zA-Z]$/.test(t);
+    let i = 0;
+    while (i < tokens.length) {
+        let token = tokens[i];
+        if (isCommand(token)) {
+            const command = token;
+            i++;
+            const params = [];
+            // Gather all following numeric tokens until the next command.
+            while (i < tokens.length && !isCommand(tokens[i])) {
+                params.push(parseFloat(tokens[i]));
+                i++;
+            }
+            commands.push({ command, params });
+        } else {
+            // In case of malformed string.
+            i++;
+        }
     }
 
-    output.forEach(function (x) {
-        textOut += "[".concat(x[0], ", ").concat(x[1], "],");
-    });
-    textOut += "[4, 0]]";
-    return textOut;
+    // Ensure the first command is an absolute "M".
+    if (
+        commands.length === 0 ||
+        commands[0].command !== "M" ||
+        commands[0].params.length < 2
+    ) {
+        console.warn("Path does not begin with a valid absolute M command.");
+        return path;
+    }
+
+    // The first M command defines an offset.
+    const offsetX = commands[0].params[0];
+    const offsetY = commands[0].params[1];
+
+    // Adjust the first command.
+    // In SVG, extra coordinate pairs in a moveto are treated as L commands.
+    // We subtract the offset from all coordinate pairs.
+    for (let j = 0; j < commands[0].params.length; j += 2) {
+        commands[0].params[j] -= offsetX;
+        commands[0].params[j + 1] -= offsetY;
+    }
+
+    // For all other commands, if they use absolute coordinates (uppercase),
+    // subtract the offset appropriately.
+    for (let k = 1; k < commands.length; k++) {
+        const { command, params } = commands[k];
+        if (command !== command.toUpperCase()) {
+            continue; // Skip relative commands.
+        }
+        switch (command) {
+            case "M":
+            case "L":
+            case "T":
+                for (let j = 0; j < params.length; j += 2) {
+                    params[j] -= offsetX;
+                    params[j + 1] -= offsetY;
+                }
+                break;
+            case "H":
+                for (let j = 0; j < params.length; j++) {
+                    params[j] -= offsetX;
+                }
+                break;
+            case "V":
+                for (let j = 0; j < params.length; j++) {
+                    params[j] -= offsetY;
+                }
+                break;
+            case "C":
+                // Groups of 6 numbers: x1,y1, x2,y2, x,y.
+                for (let j = 0; j < params.length; j += 6) {
+                    params[j] -= offsetX;
+                    params[j + 1] -= offsetY;
+                    params[j + 2] -= offsetX;
+                    params[j + 3] -= offsetY;
+                    params[j + 4] -= offsetX;
+                    params[j + 5] -= offsetY;
+                }
+                break;
+            case "S":
+            case "Q":
+                // Groups of 4 numbers: (for Q: x1,y1, x,y; for S: x2,y2, x,y).
+                for (let j = 0; j < params.length; j += 4) {
+                    params[j] -= offsetX;
+                    params[j + 1] -= offsetY;
+                    params[j + 2] -= offsetX;
+                    params[j + 3] -= offsetY;
+                }
+                break;
+            case "A":
+                // Groups of 7: rx, ry, x-axis-rotation, large-arc-flag, sweep-flag, x, y.
+                // Only the final x and y get offset.
+                for (let j = 0; j < params.length; j += 7) {
+                    params[j + 5] -= offsetX;
+                    params[j + 6] -= offsetY;
+                }
+                break;
+            // Z (or z) has no parameters.
+            default:
+                break;
+        }
+    }
+
+    // Rebuild the path string.
+    const newPath = commands
+        .map(({ command, params }) => {
+            let segment = command;
+            if (params.length > 0) {
+                segment += " " + params.join(" ");
+            }
+            return segment;
+        })
+        .join(" ");
+    return newPath.trim();
 }
+
 //Calls the algorith. Normally it would be called on user request (input)
 /**
  * The main algorithm
@@ -240,9 +523,13 @@ function formatted(output, angle) {
  * @param isAngle;
  */
 export function main(path) {
-    console.log(path);
+    // Apply optimization that preserves command sequence
+    console.log("Original path:", path);
+    const optimizedPath = optimizeSvgPath(path);
+    console.log("Optimized path:", optimizedPath);
 
-    let valid = { //number of arguments for each command - needs fixing, doesnt work with grouped commands
+    // Continue with the existing conversion logic using optimizedPath
+    let valid = {
         M: 2,
         m: 2,
         L: 2,
@@ -283,7 +570,7 @@ export function main(path) {
     let prevControlPoint = null;
     // Breaks the path to signle letters and iterates throught them
 
-    for (let _i = 0, path_1 = path; _i < path_1.length; _i++) {
+    for (let _i = 0, path_1 = optimizedPath; _i < path_1.length; _i++) {
         let letter = path_1[_i];
 
         switch (true) {
@@ -460,4 +747,7 @@ export function main(path) {
     return output;
 }
 
-console.log(main("svg path"))
+const optimized = normalizeSVGPath(optimizeSvgPath("M -498.2474 394.983 L -337.0474 394.983 M -337.0474 394.983 L -337.0474 383.643 M -337.0474 383.643 L -281.4874 383.643 M -281.4874 383.643 L -281.4874 394.983 M -281.4874 394.983 L 40.9026 394.983 M 40.9026 394.983 L 40.9026 383.643 M 40.9026 383.643 L 96.4626 383.643 M 96.4626 383.643 L 96.4626 394.983 M 96.4626 394.983 L 418.8526 394.983 M 418.8526 394.983 L 418.8526 383.643 M 418.8526 383.643 L 474.4126 383.643 M 474.4126 383.643 L 474.4126 394.983 M 474.4126 394.983 L 635.6126 394.983 M 635.6126 394.983 L 635.6126 749.123 M 635.6126 749.123 L 623.7026 749.123 M 623.7026 749.123 L 623.7026 772.934 M 56.7726 534.823 L 80.5826 534.823 M 623.7026 772.934 L 635.6126 772.934 M 635.6126 772.934 L 635.6126 814.509 M 635.6126 814.509 L -498.2474 394.983 M 56.7726 534.823 L 56.7726 558.635 M 56.7726 558.635 L 80.5826 558.635 M 80.5826 534.823 L 80.5826 558.635"));
+console.log("\n")
+console.log(optimized);
+console.log(main(optimized));

@@ -12,16 +12,16 @@ export const AboutUs: FC = () => {
                 <article className={Styles["aboutUs__article"]}>
                     <h1 className={Styles["aboutUs__title"]}>What is VanGogh Painter?</h1>
                     <section>
-                        <p className={Styles["aboutUs__text"]}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi eu sapien enim. Ut eu convallis erat. Sed at leo a dui viverra rhoncus a nec massa. Donec eget nisi ut neque pulvinar condimentum. Donec eu ex nec mi mollis efficitur non eget tellus. Nullam semper hendrerit urna, vel imperdiet ipsum pulvinar non. Morbi sed dui vestibulum, porta nisl vitae, aliquet arcu. Etiam sit amet risus non metus pulvinar scelerisque. Vestibulum tellus lectus, euismod vel mi finibus, vehicula viverra elit.</p>
+                        <p className={Styles["aboutUs__text"]}>We are passionate about merging technology and creativity to inspire learning and innovation. Our project, VanGogh, embodies this mission by transforming the BBC micro:bit into a drawing robot that brings digital designs to life.</p>
                     </section>
                     <section>
-                        <p className={Styles["aboutUs__text"]}>Suspendisse ut iaculis ante. Duis eleifend turpis eu nisi efficitur, nec ultrices nunc sagittis. Suspendisse eleifend sit amet eros id accumsan. Sed ac egestas velit, et luctus elit. Maecenas risus lectus, pellentesque sed suscipit nec, tempor in nisi. Aenean ornare lectus id hendrerit pharetra. Morbi tempus auctor imperdiet. Vivamus nibh enim, faucibus a rhoncus non, vehicula finibus elit. Curabitur vel dui fermentum, semper eros quis, fringilla turpis.</p>
+                        <p className={Styles["aboutUs__text"]}>VanGogh is a 3D-printed vehicle equipped with a micro:bit microcontroller, servos, and stepper motors, enabling it to draw images based on turtle graphics commands. To enhance its capabilities, we've developed the VanGogh Extension Library, which provides functions for calibration, movement control, and drawing different shapes.</p>
                     </section>
                     <section>
-                        <p className={Styles["aboutUs__text"]}>Phasellus tempor ex quis metus dapibus ornare. Sed nec libero rhoncus, luctus tellus a, tincidunt tortor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et viverra leo. Pellentesque sed ipsum sit amet orci porttitor laoreet. Etiam sagittis tortor in lacus laoreet eleifend. Maecenas vitae rhoncus nibh, a rutrum urna. Praesent id tellus faucibus, aliquam sem at, fringilla mauris.</p>
+                        <p className={Styles["aboutUs__text"]}>To bridge the gap between digital art and physical drawing, our VanGogh SVG Converter translates SVG path drawings into turtle graphics commands that VanGogh can execute with ease.</p>
                     </section>
                     <section>
-                        <p className={Styles["aboutUs__text"]}>Curabitur dignissim elit sit amet aliquam pellentesque. Donec efficitur neque eu odio varius, non dignissim elit molestie. Duis fringilla egestas quam, non cursus justo venenatis nec. Donec dignissim velit non lacinia condimentum. Donec et finibus diam. Sed lacinia sem quam, at mollis felis semper vel. Nunc finibus orci non feugiat ornare. Nam euismod diam massa, sit amet malesuada mauris tristique sit amet. Sed auctor, felis sed fringilla dapibus, libero ipsum semper libero, vitae congue metus augue at dui.</p>
+                        <p className={Styles["aboutUs__text"]}>Through this project, we aim to empower individuals to explore the intersection of coding and robotics, fostering a hands-on learning experience that is both educational and enjoyable.</p>
                     </section>
                 </article>
                 <div className={Styles["aboutUs__imgContainer"]}>

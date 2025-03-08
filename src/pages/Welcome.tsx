@@ -49,7 +49,7 @@ export const Welcome: FC = () => {
                 <p className={Styles["welcome__subtitle"]}>Connect via bluetooth.</p>
                 <button onClick={handleConnect} className={"btn btn--large"}>Connect <Icon variant={IconVariant.BLUETOOTH} /></button>
             </main>
-            <Status />
+            <Status WLCMPage={true} />
         </>
     )
 }

@@ -6,6 +6,23 @@
     margin: .5em;
 }
 
+.status__container--welcome {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+    margin: 0;
+    padding: 1em;
+}
+.status__container--welcome.con {
+    background-color: green;
+    border-top: 4px solid #006600;
+}
+.status__container--welcome.dis {
+    background-color: darkred;
+    border-top: 4px solid #bb0000;
+}
+
 .status__text {
     font-family: 'Open Sans', sans-serif;
     font-size: 1.2rem;
@@ -13,8 +30,18 @@
     margin: 0;
 }
 
+.status__text--welcome {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.8rem;
+    color: var(--text);
+    margin: 0;
+}
+
 @media (max-width: 768px) {
     .status__container {
         margin: 0;
+    }
+    .status__text--welcome {
+        font-size: 1.4rem;
     }
 }

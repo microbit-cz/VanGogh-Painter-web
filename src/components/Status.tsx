@@ -4,7 +4,11 @@ import { Icon, IconColor, IconVariant } from "./Icon.tsx";
 import { PainterContext } from "../providers/PainterProvider.tsx";
 import { microbitStore } from "../stores/main.ts";
 
-export const Status: FC = () => {
+type StatusProps = {
+    WLCMPage?: boolean,
+}
+
+export const Status: FC<StatusProps> = ({WLCMPage}) => {
     const { state, dispatch } = useContext(PainterContext);
     const [connStatus, setConnStatus] = useState(state.connStatus);
 
@@ -24,10 +28,20 @@ export const Status: FC = () => {
 
         return () => clearInterval(interval);
     }, [connStatus, dispatch]);
-    return (
-        <div className={Styles["status__container"]}>
-            <p className={Styles["status__text"]}>VanGogh Painter status: </p>
-            <Icon variant={IconVariant.NETWORK} color={state.connStatus ? IconColor.GREEN : IconColor.RED} />
-        </div>
-    );
+
+    switch (WLCMPage) {
+        case true:
+            return (
+                <div className={`${Styles["status__container--welcome"]} ${state.connStatus ? Styles["con"] : Styles["dis"]}`}>
+                    <p className={Styles["status__text--welcome"]}>{state.connStatus ? "VanGogh is connected!" : "VanGogh is disconnected..."}</p>
+                </div>
+            );
+        default:
+            return (
+                <div className={Styles["status__container"]}>
+                    <p className={Styles["status__text"]}>VanGogh status: </p>
+                    <Icon variant={IconVariant.NETWORK} color={state.connStatus ? IconColor.GREEN : IconColor.RED} />
+                </div>
+            );
+    }
 };
