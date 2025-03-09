@@ -26,15 +26,6 @@ interface Line {
 }
 
 function calc(input: number[][]): [Angle[], Line[]] {
-    let anglesum = 0
-    input.forEach((x) => {
-        if (x[0] == 2) {
-            anglesum += x[1]
-        }
-        if (x[0] == 3) {
-            anglesum -= x[1]
-        }
-    })
 
     const coords: number[] = [0, 0]
     let angle: number = 0
@@ -428,54 +419,6 @@ export const Painter: FC = () => {
             console.error("Error sending data:", error);
         }
     };
-    /*
-        const sendout = async (input: OutputCommand[]) => {
-            const service = microbitStore.get("services");
-
-            let textOut = '['
-            input.forEach((x) => (textOut += `[${x[0]}, ${x[1]}],`))
-            textOut += '[4,0]]'
-            console.log("text out", textOut);
-            if (service && service.uartService) {
-                service.uartService.addEventListener("receiveText", (e: CustomEvent) => {
-                    const {detail} = e;
-                    if (detail.startsWith("%dr")) {
-                        const x = (parseInt(detail.slice(3)) / (input.length + 2)) * 100;
-                        console.log(`Drawing ${Math.round(x)}`);
-                        console.log(detail.slice(3) - 1);
-                        console.log(detail.slice(3));
-                        setProgress(x);
-                    }
-
-                    switch (detail) {
-                        case "%rsta":
-                            console.log("Uploading");
-                            break;
-                        case "%rend":
-                            console.log("Uploaded");
-                            break;
-                        case "%dsta":
-                            console.log("Drawing");
-                            setProgress(0);
-                            break;
-                        case "%dend":
-                            console.log("Finished");
-                            setProgress(100);
-                            break;
-                    }
-                });
-                const sendText = '%' + textOut + '%';
-                console.log("send text", sendText);
-                // const itCnt = Math.ceil(sendText.length / 14)
-                for (let i = 0; i < sendText.length; i += 14) {
-                    console.log("sending to microbit", sendText.slice(i, i + 14) + '$')
-                    await service.uartService.sendText(sendText.slice(i, i + 14) + '$')
-                }
-            } else {
-                console.log(service);
-                console.error("Failed to find service");
-            }
-        }*/
 
     const handleEdit = () => {
         if (!state.isPaused) {
@@ -523,37 +466,6 @@ export const Painter: FC = () => {
 
         setAngles(angles);
         setLines(lines);
-
-        // if (unprocessedSVG) {
-        //     const parser = new DOMParser();
-        //     const svgDoc = parser.parseFromString(unprocessedSVG.outerHTML, "image/svg+xml");
-        //     const svgElement = svgDoc.documentElement;
-        //
-        //     const viewBox = svgElement.getAttribute("viewBox");
-        //     if (viewBox) {
-        //         const [x, y, width, height] = viewBox.split(" ").map(Number);
-        //         const scaledWidth = width / scale * newScale;
-        //         const scaledHeight = height / scale * newScale;
-        //         svgElement.setAttribute("viewBox", `${x} ${y} ${scaledWidth} ${scaledHeight}`);
-        //     } else {
-        //         const width = parseFloat(svgElement.getAttribute("width") || "0");
-        //         const height = parseFloat(svgElement.getAttribute("height") || "0");
-        //         svgElement.setAttribute("width", (width * newScale).toString());
-        //         svgElement.setAttribute("height", (height * newScale).toString());
-        //     }
-        //
-        //     const serializer = new XMLSerializer();
-        //     const updatedSVG = serializer.serializeToString(svgElement);
-        //     const svg = new DOMParser().parseFromString(updatedSVG, "image/svg+xml").querySelector('svg');
-        //
-        //     if (svg) {
-        //         setUnprocessedSVG(svg);
-        //         setUnprocessedSVGstr(updatedSVG);
-        //
-        //         const pathDataList = extractPathData(svg);
-        //         setCurrentSVG(pathDataList);
-        //     }
-        // }
     };
 
     return (

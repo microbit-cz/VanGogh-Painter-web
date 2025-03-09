@@ -33,7 +33,16 @@ export const EditorPage: FC = () => {
         if (canvasRef.current) {
             console.log(canvasRef.current);
             console.log("saving");
-            const svg = canvasRef.current.toSVG();
+            const svg = canvasRef.current.toSVG({
+                width: canvasRef.current?.width.toString() ?? "500",
+                height: canvasRef.current?.height.toString() ?? "500",
+                viewBox: {
+                    width: canvasRef.current?.width ?? 500,
+                    height: canvasRef.current?.height ?? 500,
+                    x: 0,
+                    y: 0
+                }
+            });
             const svgElement = new DOMParser().parseFromString(svg, "image/svg+xml").querySelector('svg');
 
             if (svgElement) {
@@ -56,7 +65,8 @@ export const EditorPage: FC = () => {
                     <Status/>
                     <div className={Styles["editor__buttonContainer"]}>
                         <button className={"btn"} onClick={handleDone}>Done <Icon variant={IconVariant.EDIT}/></button>
-                        <button className={"btn"} onClick={handleCancel}>Cancel <Icon variant={IconVariant.CROSS}/></button>
+                        <button className={"btn"} onClick={handleCancel}>Cancel <Icon variant={IconVariant.CROSS}/>
+                        </button>
                     </div>
                 </div>
             </main>

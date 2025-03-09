@@ -144,13 +144,20 @@
     transform-origin: top left;
     border-radius: 50px;
 
-    &.dactive {
+    &.dactive:not(.penup) {
         background-color: rgb(43, 179, 9);
         z-index: 100000;
     }
+    &.dactive.penup {
+        background-color: rgba(43, 179, 9, 0.8);
+        z-index: 100000;
+    }
 
-    &.dcomplete {
+    &.dcomplete:not(.penup) {
         background-color: rgb(0, 0, 0);
+    }
+    &.dcomplete.penup {
+        background-color: rgba(120, 120, 120, 0.8);
     }
 }
 
