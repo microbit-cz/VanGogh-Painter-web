@@ -300,36 +300,30 @@ export const Painter: FC = () => {
     const zoomRef = useRef(null as HTMLInputElement | null);
     const [zoom, setZoom] = useState(1);
     const [outputCommands, setOutputCommands] = useState<number[][]>([]);
-    const rulerRef = useRef(null as HTMLDivElement | null);
-    const [containerWidth, setContainerWidth] = useState(0);
-    const [pxPerCm, setPxPerCm] = useState(37.8); // Approximate default value
+    const displayRef = useRef<HTMLDivElement>(null);
+    const [rulerWidth, setRulerWidth] = useState(300);
+    const [rulerHeight, setRulerHeight] = useState(300);
 
-    // Measure pixels per centimeter by creating a hidden element.
     useEffect(() => {
-        const cmDiv = document.createElement("div");
-        cmDiv.style.width = "1cm";
-        cmDiv.style.position = "absolute";
-        cmDiv.style.visibility = "hidden";
-        document.body.appendChild(cmDiv);
-        const px = cmDiv.getBoundingClientRect().width;
-        setPxPerCm(px);
-        document.body.removeChild(cmDiv);
-    }, []);
-
-    // Update container width on mount and when window is resized
-    useEffect(() => {
-        const updateWidth = () => {
-            if (rulerRef.current) {
-                setContainerWidth(rulerRef.current.getBoundingClientRect().width);
+        const measure = () => {
+            if (displayRef.current) {
+                const rect = displayRef.current.getBoundingClientRect();
+                console.log(rect, window.devicePixelRatio);
+                const pxToMm = 25.4 / 96;
+                // Divide rect dimensions by zoom to use the unscaled dimensions
+                const effectiveWidthMm = Math.ceil((rect.width / zoom) * pxToMm);
+                const effectiveHeightMm = Math.ceil((rect.height / zoom) * pxToMm);
+                setRulerWidth(effectiveWidthMm);
+                setRulerHeight(effectiveHeightMm);
             }
         };
-        updateWidth();
-        window.addEventListener("resize", updateWidth);
-        return () => window.removeEventListener("resize", updateWidth);
-    }, []);
 
-    // Calculate number of full centimeters that fit in the container
-    const numberOfCm = Math.floor(containerWidth / pxPerCm);
+        measure();
+        window.addEventListener("resize", measure);
+        return () => {
+            window.removeEventListener("resize", measure);
+        };
+    }, [currentSVG, zoom]);
 
     const handleStartPause = () => {
         if (!currentSVG) return;
@@ -397,6 +391,7 @@ export const Painter: FC = () => {
                     console.log(drawn);
 
                     document.querySelector(`div[data-index="${drawn - 1}"]`)?.classList.remove(Styles["dactive"]);
+                    document.querySelector(`div[data-index="${drawn - 1}"]`)?.classList.add(Styles["dcomplete"]);
                     document.querySelector(`div[data-index="${drawn}"]`)?.classList.add(Styles["dactive"]);
 
                     setProgress(x);
@@ -574,31 +569,56 @@ export const Painter: FC = () => {
                         />
                     </div>
                     <div className={Styles["painter__displayContainer"]}>
-                        <div
-                            ref={indicatorRef}
-                            className={Styles["indicator"]}
-                            style={{display: isIndicatorActive ? "block" : "none"}}
-                        ></div>
-                        <div className={Styles["painter__display"]}>
-                            {/* Dynamic Ruler */}
-                            <div className={Styles["ruler"]} ref={rulerRef}>
-                                {Array.from({length: numberOfCm + 1}).map((_, i) => (
+                        <div className={Styles["painter__display"]} ref={displayRef}>
+                            <div
+                                ref={indicatorRef}
+                                className={Styles["indicator"]}
+                                style={{display: isIndicatorActive ? "block" : "none"}}
+                            ></div>
+                            {/* Horizontal ruler */}
+                            <div
+                                className={Styles["ruler-horizontal"]}
+                                style={{
+                                    transform: `scale(${zoom})`,
+                                    transformOrigin: "top left"
+                                }}
+                            >
+                                {Array.from({length: rulerWidth + 1}, (_, i) => (
                                     <div
-                                        key={`cm-${i}`}
-                                        className={Styles["ruler__mark"]}
-                                        style={{
-                                            left: `${i * pxPerCm}px`,
-                                            position: "absolute",
-                                        }}
+                                        key={`ruler-h-${i}`}
+                                        className={Styles["ruler-mark-h"]}
+                                        style={{left: `${i}mm`}}
                                     >
-                                        {i} cm
+                                        {i % 10 === 0 && (
+                                            <span className={Styles["ruler-label-h"]}>{i}</span>
+                                        )}
                                     </div>
                                 ))}
                             </div>
 
+                            {/* Vertical ruler */}
+                            <div
+                                className={Styles["ruler-vertical"]}
+                                style={{
+                                    transform: `scale(${zoom})`,
+                                    transformOrigin: "top left"
+                                }}
+                            >
+                                {Array.from({length: rulerHeight + 1}, (_, i) => (
+                                    <div
+                                        key={`ruler-v-${i}`}
+                                        className={Styles["ruler-mark-v"]}
+                                        style={{top: `${i}mm`}}
+                                    >
+                                        {i % 10 === 0 && (
+                                            <span className={Styles["ruler-label-v"]}>{i}</span>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
                             <div
                                 className={Styles["canvasinner"]}
-                                style={{transform: `scale(${zoom / 10})`}}
+                                style={{transform: `scale(${zoom})`}}
                             >
                                 {angles.map((angled) => (
                                     <div
@@ -610,25 +630,24 @@ export const Painter: FC = () => {
                                             position: "absolute",
                                         }}
                                         data-index={angled.i}
-                                    />
-                                ))}
-                                {angles.map((angle) => (
-                                    <div
-                                        key={`angle-${angle.i}`}
-                                        className={Styles["angle"]}
-                                        style={{
-                                            top: `${angle.top}mm`,
-                                            left: `${angle.left}mm`,
-                                            position: "absolute",
-                                        }}
                                     >
-                                        {angle.val}&deg;
+                                        <div
+                                            key={`angle-${angled.i}`}
+                                            className={Styles["angle"]}
+                                            style={{
+                                                top: `5mm`,
+                                                left: `5mm`,
+                                                position: "absolute",
+                                            }}
+                                        >
+                                            {angled.val}&deg;
+                                        </div>
                                     </div>
                                 ))}
                                 {lines.map((line) => (
                                     <div
                                         key={`line-${line.i}`}
-                                        className={`${Styles["line"]} ${Styles["pendown"]}`}
+                                        className={`${Styles["line"]} ${Styles[line.pendown]}`}
                                         style={{
                                             transform: `rotate(${line.rotate})`,
                                             width: `${line.width}mm`,
@@ -651,10 +670,11 @@ export const Painter: FC = () => {
                             type="range"
                             min={0.1}
                             max={30}
+                            step={0.1}
                             defaultValue={zoom}
                             ref={zoomRef}
                             onChange={(event) => {
-                                setZoom(parseInt(event.target.value));
+                                setZoom(parseFloat(event.target.value));
                             }}
                         />
                     </div>
@@ -675,5 +695,6 @@ export const Painter: FC = () => {
                 </div>
             </main>
         </>
-    );
+    )
+        ;
 }

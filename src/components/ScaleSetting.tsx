@@ -1,6 +1,6 @@
 import {Icon, IconVariant} from "./Icon.tsx";
 import Styles from "./ScaleSetting.module.css";
-import {FC, useState} from "react";
+import {ChangeEvent, FC, useState} from "react";
 
 interface ScaleSettingProps {
     onScaleChange: (scale: number) => void;
@@ -9,7 +9,7 @@ interface ScaleSettingProps {
 export const ScaleSetting: FC<ScaleSettingProps> = ({ onScaleChange }) => {
     const [scale, setScale] = useState(1);
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         const newScale = Math.round(parseFloat(event.target.value) * 10) / 10;
         setScale(Math.round(newScale*10)/10);
         onScaleChange(newScale);

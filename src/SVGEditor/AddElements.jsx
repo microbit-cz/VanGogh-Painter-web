@@ -1,6 +1,6 @@
 import {Circle, Line, Rect, Triangle} from "fabric";
 import {IconButton} from "blocksin-system";
-import {CircleIcon, MinusIcon, SquareIcon, TriangleIcon} from "sebikostudio-icons";
+import {CircleIcon, DownloadIcon, MinusIcon, SquareIcon, TriangleIcon} from "sebikostudio-icons";
 import React from "react";
 
 function AddElements({ canvas }) {
@@ -57,6 +57,21 @@ function AddElements({ canvas }) {
         }
     }
 
+    const exportSVG = () => {
+        if (canvas) {
+            const svg = canvas.toSVG();
+            const blob = new Blob([svg], {type: "image/svg+xml;charset=utf-8"});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "canvas.svg";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    };
+
     return (
         <div>
             <IconButton onClick={addRectangle} variant="ghost" size="medium">
@@ -70,6 +85,9 @@ function AddElements({ canvas }) {
             </IconButton>
             <IconButton onClick={addLine} variant="ghost" size="medium">
                 <MinusIcon/>
+            </IconButton>
+            <IconButton onClick={exportSVG} variant="ghost" size="medium">
+                <DownloadIcon/>
             </IconButton>
         </div>
     );

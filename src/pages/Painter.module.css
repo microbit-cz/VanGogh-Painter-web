@@ -41,7 +41,6 @@
 }
 
 .painter__buttonContainer button {
-    width: 100%;
     justify-content: space-between;
 }
 
@@ -142,90 +141,111 @@
     z-index: 100;
     position: absolute;
     height: 5px;
-    cursor: pointer;
     transform-origin: top left;
     border-radius: 50px;
-
-    &.pendown {
-        background: #000;
-
-        &:hover {
-            background: rgb(206, 12, 12);
-        }
-    }
-
-    &.penup {
-        background: rgba(0, 0, 0, 0.15);
-
-        &:hover {
-            background: rgb(206, 122, 12);
-        }
-    }
 
     &.dactive {
         background-color: rgb(43, 179, 9);
         z-index: 100000;
     }
+
+    &.dcomplete {
+        background-color: rgb(0, 0, 0);
+    }
+}
+
+.pendown {
+    background: #aaa;
+}
+
+.penup {
+    background: rgba(220, 220, 220, 0.8);
 }
 
 .angle {
-    z-index: 105;
-    font-size: 2rem;
+    visibility: hidden;
+    font-family: 'Open Sans', sans-serif;
+    z-index: 1000;
+    font-size: 1rem;
     transform-origin: top left;
     position: absolute;
     color: rgb(12, 73, 206);
     display: block;
     background: rgba(255, 255, 255, 0.8);
     border: 1px solid #fff;
-    border-radius: 50px;
-    cursor: pointer;
-
-    &:hover {
-        color: rgb(7, 38, 104);
-        background: #fff;
-    }
-
-    &.dactive {
-        background-color: rgb(43, 179, 9);
-        z-index: 100000;
-    }
+    border-radius: .5em;
 }
 
 .angledot {
     z-index: 110;
     position: absolute;
-    background: rgb(12, 73, 206);
+    background: #777;
     cursor: pointer;
     display: block;
     width: 15px;
     height: 15px;
-    margin: -7.5px 0 0 -7.5px;
-    border-radius: 50px;
+    margin: -5px 0 0 -7.5px;
+    border-radius: 50%;
 
-    &:hover {
-        background: rgb(7, 38, 104);
-    }
 
     &.dactive {
-        background-color: rgb(31, 129, 7);
+        background-color: rgb(43, 179, 9);
+    }
+
+    &.dcomplete {
+        background-color: rgb(0, 0, 0);
     }
 }
 
-.ruler {
-    width: 100%;
-    height: 20px;
-    border-bottom: 1px solid #ccc;
-    margin-bottom: 4px;
-    position: relative;
+.angledot:hover .angle {
+    visibility: visible;
 }
 
-.ruler__mark {
-    width: 1px;
-    height: 100%;
-    background: #000;
-    text-align: center;
-    font-size: 10px;
-    transform: translateX(-50%);
+.ruler-horizontal {
     position: absolute;
     top: 0;
+    left: 0;
+    right: 0; /* ensure it stretches to the right edge */
+    height: 10px;
+    pointer-events: none;
+}
+
+.ruler-vertical {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0; /* ensure it stretches to the bottom edge */
+    width: 10px;
+    pointer-events: none;
+}
+
+
+.ruler-mark-h {
+    position: absolute;
+    width: 1px;
+    height: 1rem;
+    background: black;
+}
+
+.ruler-mark-v {
+    position: absolute;
+    width: 1rem;
+    height: 1px;
+    background: black;
+}
+
+.ruler-label-h {
+    position: absolute;
+    top: 1rem;
+    font-size: .8rem;
+    color: black;
+    transform: translateX(-50%);
+}
+
+.ruler-label-v {
+    position: absolute;
+    left: 1rem;
+    font-size: .8rem;
+    color: black;
+    transform: translateY(-50%);
 }

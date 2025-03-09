@@ -56,8 +56,7 @@ export const EditorPage: FC = () => {
                     <Status/>
                     <div className={Styles["editor__buttonContainer"]}>
                         <button className={"btn"} onClick={handleDone}>Done <Icon variant={IconVariant.EDIT}/></button>
-                        <button className={"btn"} onClick={handleCancel}>Cancel <Icon variant={IconVariant.CROSS}/>
-                        </button>
+                        <button className={"btn"} onClick={handleCancel}>Cancel <Icon variant={IconVariant.CROSS}/></button>
                     </div>
                 </div>
             </main>

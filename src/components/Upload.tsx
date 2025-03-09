@@ -1,6 +1,6 @@
 import { Icon, IconVariant } from "./Icon.tsx";
 import Styles from "./Upload.module.css";
-import { FC, useContext } from "react";
+import { FC, useContext, DragEvent } from "react";
 import { PainterContext } from "../providers/PainterProvider.tsx";
 import { useNavigate } from "react-router-dom";
 import { extractPathData } from "../utils.ts";
@@ -48,11 +48,11 @@ export const Upload: FC = () => {
         inputElement?.click();
     };
 
-    const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    const handleDragOver = (event: DragEvent<HTMLDivElement>) => {
         event.preventDefault();
     };
 
-    const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    const handleDrop = (event: DragEvent<HTMLDivElement>) => {
         event.preventDefault();
         const file = event.dataTransfer.files[0];
         if (file) {

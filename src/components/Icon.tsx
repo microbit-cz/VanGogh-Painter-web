@@ -1,5 +1,4 @@
 import {FC} from "react";
-import "./Icon.module.css";
 
 export enum IconVariant {
     CROSS = "CROSS",

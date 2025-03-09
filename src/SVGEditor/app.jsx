@@ -58,20 +58,6 @@ function CanvasApp({svgData, save}) {
         };
     }, []); // Run only once on mount
 
-    const exportSVG = () => {
-        if (canvas) {
-            const svg = canvas.toSVG();
-            const blob = new Blob([svg], {type: "image/svg+xml;charset=utf-8"});
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "canvas.svg";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-    };
 
     return (
         <div className="App">
@@ -82,7 +68,6 @@ function CanvasApp({svgData, save}) {
             <div>
                 <Settings canvas={canvas}/>
                 <CanvasSettings canvas={canvas}/>
-                <button onClick={exportSVG}>Export SVG</button>
             </div>
         </div>
     );
