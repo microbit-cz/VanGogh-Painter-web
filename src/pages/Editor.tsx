@@ -9,6 +9,8 @@ import {PainterContext} from "../providers/PainterProvider.tsx";
 // @ts-expect-error
 import CanvasApp from "../SVGEditor/app.jsx";
 import {extractPathData} from "../utils.ts";
+import {convertToPath} from "../SVGEditor/export.js";
+import {Canvas, TSVGExportOptions} from "fabric";
 
 export const EditorPage: FC = () => {
     const {
@@ -33,21 +35,41 @@ export const EditorPage: FC = () => {
         if (canvasRef.current) {
             console.log(canvasRef.current);
             console.log("saving");
-            const svg = canvasRef.current.toSVG({
-                width: canvasRef.current?.width.toString() ?? "500",
-                height: canvasRef.current?.height.toString() ?? "500",
-                viewBox: {
-                    width: canvasRef.current?.width ?? 500,
-                    height: canvasRef.current?.height ?? 500,
-                    x: 0,
-                    y: 0
+
+            const canvas = canvasRef.current;
+
+            const tempCanvas = new Canvas(document.createElement("canvas"));
+            canvasRef.current.getObjects().forEach(obj => {
+                if (obj.isType("rect", "circle", "line", "triangle")) {
+                    const path = convertToPath(obj);
+                    if (path) {
+                        tempCanvas.add(path);
+                    }
+                } else {
+                    tempCanvas.add(obj);
                 }
             });
-            const svgElement = new DOMParser().parseFromString(svg, "image/svg+xml").querySelector('svg');
+
+            const svgOptions: TSVGExportOptions = {
+                suppressPreamble: false,
+                viewBox: {
+                    x: 0,
+                    y: 0,
+                    width: canvas.width,
+                    height: canvas.height
+                },
+                width: canvas.width.toString(),
+                height: canvas.height.toString(),
+            };
+
+            const svgData = tempCanvas.toSVG(svgOptions);
+            console.log(svgData);
+
+            const svgElement = new DOMParser().parseFromString(svgData, "image/svg+xml").querySelector('svg');
 
             if (svgElement) {
                 setUnprocessedSVG(svgElement);
-                setUnprocessedSVGstr(svg);
+                setUnprocessedSVGstr(svgData);
 
                 const pathDataList = extractPathData(svgElement);
                 setCurrentSVG(pathDataList);

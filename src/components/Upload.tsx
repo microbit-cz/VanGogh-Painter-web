@@ -26,6 +26,8 @@ export const Upload: FC = () => {
                 .parseFromString(svgContent, "image/svg+xml")
                 .querySelector("svg");
 
+
+
             if (svgElement) {
                 // Save the unprocessed SVG content
                 setUnprocessedSVG(svgElement); // Store the SVG content in unprocessedSVG

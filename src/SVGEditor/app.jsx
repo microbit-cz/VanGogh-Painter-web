@@ -7,7 +7,6 @@ import CanvasSettings from "./CanvasSettings";
 import {handleObjectMoving, clearGuidelines} from "./SnappingHelpers.jsx";
 import {loadSVGFromString, util} from "fabric";
 import {useNavigate} from "react-router-dom";
-import {shapeToPath} from "svg-path-commander";
 import {PainterContext} from "../providers/PainterProvider.tsx";
 
 function CanvasApp({svgData, save}) {
@@ -36,8 +35,8 @@ function CanvasApp({svgData, save}) {
 
         loadSVGFromString(svgData).then((loadedSvg) => {
             const group = util.groupSVGElements(loadedSvg.objects, loadedSvg.options);
-            group.scaleToHeight(500);
-            group.scaleToWidth(500);
+            // group.scaleToHeight(500);
+            // group.scaleToWidth(500);
             initCanvas.add(group);
             initCanvas.renderAll();
         })
@@ -66,8 +65,8 @@ function CanvasApp({svgData, save}) {
             </div>
             <canvas id="canvas" ref={canvasRef}/>
             <div>
-                <Settings canvas={canvas}/>
                 <CanvasSettings canvas={canvas}/>
+                <Settings canvas={canvas}/>
             </div>
         </div>
     );

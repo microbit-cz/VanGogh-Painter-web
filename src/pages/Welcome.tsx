@@ -37,7 +37,7 @@ export const Welcome: FC = () => {
             }
             newDevice.addEventListener("gattserverdisconnected", handleConnect);
             dispatch({ type: 'DISCONNECT_CONNECT', payload: true });
-            navigate("/upload");
+            navigate("/Upload");
         }
     }
 

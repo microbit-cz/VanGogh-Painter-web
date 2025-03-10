@@ -77,7 +77,6 @@ function calc(input: number[][]): [Angle[], Line[]] {
                 break
             }
         }
-
     }
 
     console.log(lines)
@@ -100,9 +99,7 @@ function scaleSVGPath(path: string, targetWidth: number): string {
         commands.push({command, args});
     }
 
-    // Determine the bounding box (only horizontal bounds are used for
-    // scaling, but vertical bounds are used for translation to keep the shape’s
-    // relative position).
+    // Determine the bounding box (only horizontal bounds are used for scaling, but vertical bounds are used for translation to keep the shape’s relative position).
     let xMin = Infinity,
         xMax = -Infinity,
         yMin = Infinity,

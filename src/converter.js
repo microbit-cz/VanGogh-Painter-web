@@ -650,6 +650,9 @@ export function main(path) {
         down: false
     };
 
+    // Track the starting point of the current subpath
+    let currentSubpathStart = [0, 0];
+
     commands.forEach(function (command) {
         let args = command.args;
         let relArgs;
@@ -661,10 +664,17 @@ export function main(path) {
         let curve;
 
         switch (command.name) {
-            case "L": case "M": case "l": case "m": //move and line
-                relArgs = (command.name === "L" || command.name === "M") ? [args[0] - pen.coords[0], args[1] - pen.coords[1]] : [args[0], args[1]];
-                pen.coords = (command.name === "L" || command.name === "M") ? [args[0], args[1]] : [pen.coords[0] + args[0], pen.coords[1] + args[1]];
-                command.name === "L" || command.name === "l" ? draw(pen, relArgs, true, output) : draw(pen, relArgs, false, output);
+            case "M": case "m": // Move commands start a new subpath
+                relArgs = (command.name === "M") ? [args[0] - pen.coords[0], args[1] - pen.coords[1]] : [args[0], args[1]];
+                pen.coords = (command.name === "M") ? [args[0], args[1]] : [pen.coords[0] + args[0], pen.coords[1] + args[1]];
+                draw(pen, relArgs, false, output);
+                // Update the starting point of the current subpath
+                currentSubpathStart = [...pen.coords];
+                break;
+            case "L": case "l":
+                relArgs = (command.name === "L") ? [args[0] - pen.coords[0], args[1] - pen.coords[1]] : [args[0], args[1]];
+                pen.coords = (command.name === "L") ? [args[0], args[1]] : [pen.coords[0] + args[0], pen.coords[1] + args[1]];
+                draw(pen, relArgs, true, output);
                 break;
             case "H": case "h": case "V": case "v": //
                 isHorizontal = (command.name == "H" || command.name == "h");
@@ -736,7 +746,17 @@ export function main(path) {
                 }
                 break;
             case "Z": case "z":
-                draw(pen, [0, 0], true, output); //returns to 0, 0
+                // Calculate the relative coordinates to the start of the subpath
+                const relativeToStart = [
+                    currentSubpathStart[0] - pen.coords[0],
+                    currentSubpathStart[1] - pen.coords[1]
+                ];
+
+                // Draw a line to the start of the subpath
+                draw(pen, relativeToStart, true, output);
+
+                // Update pen position to the start of the subpath
+                pen.coords = [...currentSubpathStart];
         }
     });
 

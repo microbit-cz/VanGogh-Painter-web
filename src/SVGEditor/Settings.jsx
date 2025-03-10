@@ -81,7 +81,19 @@ function Settings({ canvas }) {
             canvas.renderAll();
         }
     };
+/*
+    const handleRadiusChange = (e) => {
+        const value = e.target.value.replace(/,/g, "");
+        const intValue = parseInt(value, 10);
 
+        setRadius(intValue);
+
+        if (selectedObject && selectedObject.type === "triangle" && intValue >= 0) {
+            selectedObject.set({ radius: intValue / selectedObject.scaleX });
+            canvas.renderAll();
+        }
+    }
+*/
     const handleDiameterChange = (e) => {
         const value = e.target.value.replace(/,/g, "");
         const intValue = parseInt(value, 10);
@@ -120,6 +132,21 @@ function Settings({ canvas }) {
                         value={height}
                         fluid
                         onChange={handleHeightChange}
+                    />
+                </>
+            )}
+            {selectedObject && selectedObject.type === "triangle" && (
+                <>
+
+                </>
+            )}
+            {selectedObject && selectedObject.type === "circle" && (
+                <>
+                    <Input
+                        fluid
+                        label="Diameter"
+                        value={diameter}
+                        onChange={handleDiameterChange}
                     />
                 </>
             )}

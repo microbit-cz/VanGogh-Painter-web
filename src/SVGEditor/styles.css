@@ -44,8 +44,8 @@ body {
 
 .Settings {
   position: relative;
-  right: 16px;
-  top: 50%;
+  right: 100%;
+  top: 0;
   transform: translateY(-50%);
   gap: 8px;
   display: flex;
@@ -56,6 +56,23 @@ body {
   text-align: left;
 }
 .Settings:empty {
+  padding: 0;
+}
+
+.CanvasSettings {
+  position: relative;
+  right: -100%;
+  top: 50%;
+  transform: translateY(-50%);
+  gap: 8px;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--background-neutral-container);
+  padding: 24px 8px;
+  border-radius: 4px;
+  text-align: left;
+}
+.CanvasSettings:empty {
   padding: 0;
 }
 
