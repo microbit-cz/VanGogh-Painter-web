@@ -1,28 +1,38 @@
 import * as fabric from "fabric";
+import {Path, Point, TMat2D} from "fabric";
 
 // Transform a point using the transformation matrix
-export function transformPoint(point, matrix) {
+export function transformPoint(point: number[], matrix: TMat2D) {
     return fabric.util.transformPoint({
-        x: point.x || point[0],
-        y: point.y || point[1]
+        x: point[0],
+        y: point[1]
     }, matrix);
 }
 
 // Create rectangle path using the transformation matrix
-export function createRectPathFromMatrix(width, height, radius, matrix) {
+export function createRectPathFromMatrix(width: number, height: number, radius: number, matrix: TMat2D) {
     // Define the rectangle points in the object's coordinate system
     const halfW = width / 2;
     const halfH = height / 2;
 
     if (radius > 0) {
         // Handle rounded corners
-        const points = [];
+        const points: {
+            command: string;
+            points: Point[]
+        }[] = [];
         const r = Math.min(radius, halfW, halfH);
 
         // Top left corner
-        points.push(transformPoint([-halfW + r, -halfH], matrix));
+        points.push({
+            command: '',
+            points: [transformPoint([-halfW + r, -halfH], matrix)],
+        });
         // Top edge to top right corner
-        points.push(transformPoint([halfW - r, -halfH], matrix));
+        points.push({
+            command: '',
+            points: [transformPoint([halfW - r, -halfH], matrix)]
+        });
         // Top right corner arc
         const trStart = transformPoint([halfW, -halfH + r], matrix);
         points.push({
@@ -33,7 +43,10 @@ export function createRectPathFromMatrix(width, height, radius, matrix) {
             ]
         });
         // Right edge to bottom right corner
-        points.push(transformPoint([halfW, halfH - r], matrix));
+        points.push({
+            command: '',
+            points: [transformPoint([halfW, halfH - r], matrix)]
+        });
         // Bottom right corner arc
         const brStart = transformPoint([halfW - r, halfH], matrix);
         points.push({
@@ -44,7 +57,10 @@ export function createRectPathFromMatrix(width, height, radius, matrix) {
             ]
         });
         // Bottom edge to bottom left corner
-        points.push(transformPoint([-halfW + r, halfH], matrix));
+        points.push({
+            command: '',
+            points: [transformPoint([-halfW + r, halfH], matrix)]
+        });
         // Bottom left corner arc
         const blStart = transformPoint([-halfW, halfH - r], matrix);
         points.push({
@@ -55,7 +71,10 @@ export function createRectPathFromMatrix(width, height, radius, matrix) {
             ]
         });
         // Left edge to top left corner
-        points.push(transformPoint([-halfW, -halfH + r], matrix));
+        points.push({
+            command: '',
+            points: [transformPoint([-halfW, -halfH + r], matrix)]
+        });
         // Top left corner arc
         const tlStart = transformPoint([-halfW + r, -halfH], matrix);
         points.push({
@@ -67,14 +86,14 @@ export function createRectPathFromMatrix(width, height, radius, matrix) {
         });
 
         // Construct the path string
-        let pathData = `M ${points[0].x},${points[0].y} `;
-        pathData += `L ${points[1].x},${points[1].y} `;
+        let pathData = `M ${points[0].points[0].x},${points[0].points[1].y} `;
+        pathData += `L ${points[1].points[0].x},${points[1].points[1].y} `;
         pathData += `Q ${points[2].points[0].x},${points[2].points[0].y} ${points[2].points[1].x},${points[2].points[1].y} `;
-        pathData += `L ${points[3].x},${points[3].y} `;
+        pathData += `L ${points[3].points[0].x},${points[3].points[1].y} `;
         pathData += `Q ${points[4].points[0].x},${points[4].points[0].y} ${points[4].points[1].x},${points[4].points[1].y} `;
-        pathData += `L ${points[5].x},${points[5].y} `;
+        pathData += `L ${points[5].points[0].x},${points[5].points[1].y} `;
         pathData += `Q ${points[6].points[0].x},${points[6].points[0].y} ${points[6].points[1].x},${points[6].points[1].y} `;
-        pathData += `L ${points[7].x},${points[7].y} `;
+        pathData += `L ${points[7].points[0].x},${points[7].points[1].y} `;
         pathData += `Q ${points[8].points[0].x},${points[8].points[0].y} ${points[8].points[1].x},${points[8].points[1].y} `;
         pathData += 'Z';
 
@@ -91,12 +110,7 @@ export function createRectPathFromMatrix(width, height, radius, matrix) {
 }
 
 // Create circle path using the transformation matrix
-export function createCirclePathFromMatrix(radius, matrix) {
-    // For circles, we need to approximate with Bezier curves
-    // We'll use 4 quadratic bezier curves to create the circle
-
-    const center = transformPoint([0, 0], matrix);
-
+export function createCirclePathFromMatrix(radius: number, matrix: TMat2D) {
     // Calculate control points for the circle based on the transformed radius
     // We'll create 4 arcs to form the circle
     const top = transformPoint([0, -radius], matrix);
@@ -130,7 +144,7 @@ export function createCirclePathFromMatrix(radius, matrix) {
 }
 
 // Create triangle path using the transformation matrix
-export function createTrianglePathFromMatrix(width, height, matrix) {
+export function createTrianglePathFromMatrix(width: number, height: number, matrix: TMat2D) {
     const halfW = width / 2;
     const halfH = height / 2;
 
@@ -143,7 +157,7 @@ export function createTrianglePathFromMatrix(width, height, matrix) {
 }
 
 // Create line path using the transformation matrix
-export function createLinePathFromMatrix(points, matrix) {
+export function createLinePathFromMatrix(points: number[], matrix: TMat2D) {
     // Points are in format [x1, y1, x2, y2]
     // Need to convert to coordinate system centered at the line's center
     const centerX = (points[0] + points[2]) / 2;
@@ -156,7 +170,16 @@ export function createLinePathFromMatrix(points, matrix) {
 }
 
 // Transform an existing path using the matrix
-export function transformPath(pathData, matrix) {
+export function transformPath(pathData: {
+        command: string;
+        x?: number;
+        y?: number;
+        x1?: number;
+        y1?: number;
+        x2?: number;
+        y2?: number;
+    }[],
+    matrix: TMat2D) {
     if (!pathData) return null;
 
     // Clone the path data
@@ -172,8 +195,7 @@ export function transformPath(pathData, matrix) {
                 item.x = point.x;
                 item.y = point.y;
             }
-        }
-        else if (item.command === 'Q') {
+        } else if (item.command === 'Q') {
             if (item.x !== undefined && item.y !== undefined) {
                 const point = transformPoint([item.x, item.y], matrix);
                 item.x = point.x;
@@ -184,8 +206,7 @@ export function transformPath(pathData, matrix) {
                 item.x1 = point.x;
                 item.y1 = point.y;
             }
-        }
-        else if (item.command === 'C') {
+        } else if (item.command === 'C') {
             if (item.x !== undefined && item.y !== undefined) {
                 const point = transformPoint([item.x, item.y], matrix);
                 item.x = point.x;

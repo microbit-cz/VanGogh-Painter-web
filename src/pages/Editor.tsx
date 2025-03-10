@@ -9,7 +9,6 @@ import {PainterContext} from "../providers/PainterProvider.tsx";
 // @ts-expect-error
 import CanvasApp from "../SVGEditor/app.jsx";
 import {extractPathData} from "../utils.ts";
-import {convertToPath} from "../SVGEditor/export.js";
 import {Canvas, TSVGExportOptions} from "fabric";
 
 export const EditorPage: FC = () => {
@@ -41,6 +40,7 @@ export const EditorPage: FC = () => {
             const tempCanvas = new Canvas(document.createElement("canvas"));
             canvasRef.current.getObjects().forEach(obj => {
                 if (obj.isType("rect", "circle", "line", "triangle")) {
+                    // TODO: predelat podle kodu z test stranky script.js:72
                     const path = convertToPath(obj);
                     if (path) {
                         tempCanvas.add(path);
