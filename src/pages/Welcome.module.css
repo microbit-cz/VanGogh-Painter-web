@@ -12,6 +12,12 @@
     animation: pulse 3s infinite alternate ease-in-out;
 }
 
+@media (prefers-color-scheme: light) {
+    .welcome__main {
+        background: radial-gradient(circle, rgba(239, 234, 222, 0.8) 10%, rgba(209, 204, 232, 0.4) 40%, rgba(239, 234, 222, 0.1) 70%);
+    }
+}
+
 @keyframes pulse {
     0% {
         background-size: 150% 150%;

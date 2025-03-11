@@ -5,7 +5,7 @@ export enum IconVariant {
     BLUETOOTH = "BLUETOOTH",
     GITHUB = "GITHUB",
     EDIT = "EDIT",
-    PLAY_PAUSE = "PLAY_PAUSE",
+    PLAY = "PLAY",
     PLUS = "PLUS",
     MINUS = "MINUS",
     UPLOAD = "UPLOAD",
@@ -52,12 +52,12 @@ export const Icon: FC<IconProps> = ({ variant, size, color }) => {
                     </g>
                 </svg>
             );
-        case IconVariant.PLAY_PAUSE:
+        case IconVariant.PLAY:
             return (
-                <svg xmlns="http://www.w3.org/2000/svg" width={`${size ? `${size}em` : "1.5em"}`} height={`${size ? `${size}em` : "1.5em"}`} viewBox="0 0 16 16">
-                    <path fill={color ? `${color}` : "currentColor"} d="M1 4.804a1 1 0 0 1 1.53-.848l5.113 3.196a1 1 0 0 1 0 1.696L2.53 12.044A1 1 0 0 1 1 11.196zM13.5 4.5A.5.5 0 0 1 14 4h.5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5H14a.5.5 0 0 1-.5-.5zm-3-.5a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .5.5h.5a.5.5 0 0 0 .5-.5v-7A.5.5 0 0 0 11 4z"/>
+                <svg width={`${size ? `${size}em` : "1.5em"}`} height={`${size ? `${size}em` : "1.5em"}`} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20.409 9.35294C20.8893 9.60835 21.291 9.98963 21.5712 10.4559C21.8514 10.9222 21.9994 11.456 21.9994 11.9999C21.9994 12.5439 21.8514 13.0777 21.5712 13.544C21.291 14.0102 20.8893 14.3915 20.409 14.6469L7.597 21.6139C5.534 22.7369 3 21.2769 3 18.9679V5.03294C3 2.72294 5.534 1.26394 7.597 2.38494L20.409 9.35294Z" stroke={color ? `${color}` : "currentColor"} stroke-width="1.5"/>
                 </svg>
-        );
+            );
         case IconVariant.PLUS:
             return (
                 <svg xmlns="http://www.w3.org/2000/svg" width={`${size ? `${size}em` : "1.5em"}`} height={`${size ? `${size}em` : "1.5em"}`} viewBox="0 0 24 24">

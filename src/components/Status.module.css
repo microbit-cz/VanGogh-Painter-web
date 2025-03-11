@@ -15,12 +15,12 @@
     padding: 1em;
 }
 .status__container--welcome.con {
-    background-color: green;
-    border-top: 4px solid #006600;
+    background-color: var(--statusCon);
+    border-top: 4px solid var(--statusConB);
 }
 .status__container--welcome.dis {
-    background-color: darkred;
-    border-top: 4px solid #bb0000;
+    background-color: var(--statusDis);
+    border-top: 4px solid var(--statusDisB);
 }
 
 .status__text {

@@ -9,7 +9,8 @@ import {PainterContext} from "../providers/PainterProvider.tsx";
 // @ts-expect-error
 import CanvasApp from "../SVGEditor/app.jsx";
 import {extractPathData} from "../utils.ts";
-import {Canvas, TSVGExportOptions} from "fabric";
+import {Canvas} from "fabric";
+import {processObjects} from "../SVGEditor/export";
 
 export const EditorPage: FC = () => {
     const {
@@ -37,20 +38,15 @@ export const EditorPage: FC = () => {
 
             const canvas = canvasRef.current;
 
-            const tempCanvas = new Canvas(document.createElement("canvas"));
-            canvasRef.current.getObjects().forEach(obj => {
-                if (obj.isType("rect", "circle", "line", "triangle")) {
-                    // TODO: predelat podle kodu z test stranky script.js:72
-                    const path = convertToPath(obj);
-                    if (path) {
-                        tempCanvas.add(path);
-                    }
-                } else {
-                    tempCanvas.add(obj);
-                }
+            // Create a temporary canvas
+            const tempCanvas = new Canvas(document.createElement("canvas"), {
+                width: canvas.width,
+                height: canvas.height
             });
 
-            const svgOptions: TSVGExportOptions = {
+            processObjects(canvas.getObjects(), tempCanvas, [1,0,0,1,0,0]);
+
+            const svgOptions = {
                 suppressPreamble: false,
                 viewBox: {
                     x: 0,
@@ -64,6 +60,8 @@ export const EditorPage: FC = () => {
 
             const svgData = tempCanvas.toSVG(svgOptions);
             console.log(svgData);
+
+            tempCanvas.dispose();
 
             const svgElement = new DOMParser().parseFromString(svgData, "image/svg+xml").querySelector('svg');
 

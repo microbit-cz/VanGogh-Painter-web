@@ -1,7 +1,165 @@
-import * as fabric from "fabric";
+import * as fabric from 'fabric';
+
+// Process objects recursively (to handle groups)
+export function processObjects(objects, targetCanvas, parentMatrix) {
+    objects.forEach(obj => {
+        if (obj.type === 'group') {
+            // For groups, we need to handle transformations carefully
+
+            // Get the group's matrix
+            const groupMatrix = obj.calcTransformMatrix();
+
+            // If there's a parent matrix, combine them
+            const finalGroupMatrix = parentMatrix ?
+                fabric.util.multiplyTransformMatrices(parentMatrix, groupMatrix) :
+                groupMatrix;
+
+            // Process all objects in the group using the group's matrix as their parent
+            processObjects(obj.getObjects(), targetCanvas, finalGroupMatrix);
+        } else {
+            // For individual objects, we need to:
+            // 1. Get the object's transform without any group transformations
+            const localMatrix = [
+                obj.scaleX, 0, 0, obj.scaleY,
+                obj.left + (obj.width * obj.scaleX * 0.5),
+                obj.top + (obj.height * obj.scaleY * 0.5)
+            ];
+
+            // 2. If we have a parent matrix (from groups), apply it after the local transform
+            const finalMatrix = parentMatrix ?
+                fabric.util.multiplyTransformMatrices(parentMatrix, localMatrix) :
+                obj.calcTransformMatrix();
+
+            // Now convert the object to a path with this transformation
+            convertObjectToPath(obj, finalMatrix, targetCanvas);
+        }
+    });
+}
+
+// Multiply two matrices
+function multiplyMatrices(a, b) {
+    return [
+        a[0] * b[0] + a[2] * b[1],
+        a[1] * b[0] + a[3] * b[1],
+        a[0] * b[2] + a[2] * b[3],
+        a[1] * b[2] + a[3] * b[3],
+        a[0] * b[4] + a[2] * b[5] + a[4],
+        a[1] * b[4] + a[3] * b[5] + a[5]
+    ];
+}
+
+// Convert an object to a path with all transformations applied
+function convertObjectToPath(obj, matrix, targetCanvas) {
+    // Set up the basic styling properties
+    const options = {
+        fill: obj.fill || "",
+        stroke: obj.stroke || "",
+        strokeWidth: obj.strokeWidth || 0,
+        opacity: obj.opacity || 1,
+        // Reset all transformation properties
+        left: 0,
+        top: 0,
+        scaleX: 1,
+        scaleY: 1,
+        skewX: 0,
+        skewY: 0,
+        angle: 0,
+        originX: 'center',
+        originY: 'center'
+    };
+
+    let pathData;
+
+    try {
+        if (obj.type === 'rect') {
+            pathData = createRectPathFromMatrix(obj.width, obj.height, obj.rx || 0, matrix);
+        } else if (obj.type === 'circle') {
+            pathData = createCirclePathFromMatrix(obj.radius, matrix);
+        } else if (obj.type === 'triangle') {
+            pathData = createTrianglePathFromMatrix(obj.width, obj.height, matrix);
+        } else if (obj.type === 'line') {
+            pathData = createLinePathFromMatrix([obj.x1, obj.y1, obj.x2, obj.y2], matrix);
+        } else if (obj.type === 'path') {
+            // For paths, a more direct approach is needed
+            if (typeof obj.path === 'string') {
+                // If it's a path string, create a temporary path object
+                const tempPath = new fabric.Path(obj.path);
+                // Apply the transform matrix
+                const transformed = applyTransformToPath(tempPath.path, matrix);
+                pathData = transformed;
+            } else if (Array.isArray(obj.path)) {
+                // If it's already a path array, transform it directly
+                pathData = applyTransformToPath(obj.path, matrix);
+            }
+        } else {
+            console.warn("Unsupported object type:", obj.type);
+            return;
+        }
+
+        if (pathData) {
+            const pathObj = new fabric.Path(pathData, options);
+            targetCanvas.add(pathObj);
+        }
+    } catch (err) {
+        console.error("Error processing object:", err);
+    }
+}
+
+// Helper function to apply a transform matrix to a path
+function applyTransformToPath(path, matrix) {
+    if (!Array.isArray(path)) return path;
+
+    const result = [];
+
+    for (let i = 0; i < path.length; i++) {
+        const command = path[i];
+        const cmd = Array.isArray(command) ? command[0] : command.command;
+
+        if (cmd === 'M' || cmd === 'L') {
+            if (Array.isArray(command)) {
+                const point = transformPoint({x: command[1], y: command[2]}, matrix);
+                result.push([cmd, point.x, point.y]);
+            } else {
+                const point = transformPoint({x: command.x, y: command.y}, matrix);
+                result.push({command: cmd, x: point.x, y: point.y});
+            }
+        } else if (cmd === 'C') {
+            if (Array.isArray(command)) {
+                const p1 = transformPoint({x: command[1], y: command[2]}, matrix);
+                const p2 = transformPoint({x: command[3], y: command[4]}, matrix);
+                const p3 = transformPoint({x: command[5], y: command[6]}, matrix);
+                result.push([cmd, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y]);
+            } else {
+                const p1 = transformPoint({x: command.x1, y: command.y1}, matrix);
+                const p2 = transformPoint({x: command.x2, y: command.y2}, matrix);
+                const p3 = transformPoint({x: command.x, y: command.y}, matrix);
+                result.push({command: cmd, x1: p1.x, y1: p1.y, x2: p2.x, y2: p2.y, x: p3.x, y: p3.y});
+            }
+        } else if (cmd === 'Q') {
+            if (Array.isArray(command)) {
+                const p1 = transformPoint({x: command[1], y: command[2]}, matrix);
+                const p2 = transformPoint({x: command[3], y: command[4]}, matrix);
+                result.push([cmd, p1.x, p1.y, p2.x, p2.y]);
+            } else {
+                const p1 = transformPoint({x: command.x1, y: command.y1}, matrix);
+                const p2 = transformPoint({x: command.x, y: command.y}, matrix);
+                result.push({command: cmd, x1: p1.x, y1: p1.y, x: p2.x, y: p2.y});
+            }
+        } else if (cmd === 'Z') {
+            if (Array.isArray(command)) {
+                result.push(['Z']);
+            } else {
+                result.push({command: 'Z'});
+            }
+        }
+    }
+
+    return result;
+}
+
 
 // Transform a point using the transformation matrix
-export function transformPoint(point, matrix) {
+function transformPoint(point, matrix) {
     return fabric.util.transformPoint({
         x: point.x || point[0],
         y: point.y || point[1]
@@ -9,7 +167,7 @@ export function transformPoint(point, matrix) {
 }
 
 // Create rectangle path using the transformation matrix
-export function createRectPathFromMatrix(width, height, radius, matrix) {
+function createRectPathFromMatrix(width, height, radius, matrix) {
     // Define the rectangle points in the object's coordinate system
     const halfW = width / 2;
     const halfH = height / 2;
@@ -91,7 +249,7 @@ export function createRectPathFromMatrix(width, height, radius, matrix) {
 }
 
 // Create circle path using the transformation matrix
-export function createCirclePathFromMatrix(radius, matrix) {
+function createCirclePathFromMatrix(radius, matrix) {
     // For circles, we need to approximate with Bezier curves
     // We'll use 4 quadratic bezier curves to create the circle
 
@@ -130,7 +288,7 @@ export function createCirclePathFromMatrix(radius, matrix) {
 }
 
 // Create triangle path using the transformation matrix
-export function createTrianglePathFromMatrix(width, height, matrix) {
+function createTrianglePathFromMatrix(width, height, matrix) {
     const halfW = width / 2;
     const halfH = height / 2;
 
@@ -143,7 +301,7 @@ export function createTrianglePathFromMatrix(width, height, matrix) {
 }
 
 // Create line path using the transformation matrix
-export function createLinePathFromMatrix(points, matrix) {
+function createLinePathFromMatrix(points, matrix) {
     // Points are in format [x1, y1, x2, y2]
     // Need to convert to coordinate system centered at the line's center
     const centerX = (points[0] + points[2]) / 2;
@@ -156,55 +314,20 @@ export function createLinePathFromMatrix(points, matrix) {
 }
 
 // Transform an existing path using the matrix
-export function transformPath(pathData, matrix) {
+function transformPath(pathData, matrix) {
     if (!pathData) return null;
 
-    // Clone the path data
-    const newPath = [];
+    try {
+        // Create a temporary path object
+        const tempPath = new fabric.Path(pathData);
 
-    // Transform each point in the path
-    for (let i = 0; i < pathData.length; i++) {
-        const item = Object.assign({}, pathData[i]);
+        // Apply the transformation matrix
+        tempPath.transform(matrix);
 
-        if (item.command === 'M' || item.command === 'L' || item.command === 'Z') {
-            if (item.x !== undefined && item.y !== undefined) {
-                const point = transformPoint([item.x, item.y], matrix);
-                item.x = point.x;
-                item.y = point.y;
-            }
-        }
-        else if (item.command === 'Q') {
-            if (item.x !== undefined && item.y !== undefined) {
-                const point = transformPoint([item.x, item.y], matrix);
-                item.x = point.x;
-                item.y = point.y;
-            }
-            if (item.x1 !== undefined && item.y1 !== undefined) {
-                const point = transformPoint([item.x1, item.y1], matrix);
-                item.x1 = point.x;
-                item.y1 = point.y;
-            }
-        }
-        else if (item.command === 'C') {
-            if (item.x !== undefined && item.y !== undefined) {
-                const point = transformPoint([item.x, item.y], matrix);
-                item.x = point.x;
-                item.y = point.y;
-            }
-            if (item.x1 !== undefined && item.y1 !== undefined) {
-                const point = transformPoint([item.x1, item.y1], matrix);
-                item.x1 = point.x;
-                item.y1 = point.y;
-            }
-            if (item.x2 !== undefined && item.y2 !== undefined) {
-                const point = transformPoint([item.x2, item.y2], matrix);
-                item.x2 = point.x;
-                item.y2 = point.y;
-            }
-        }
-
-        newPath.push(item);
+        // Return the transformed path data
+        return tempPath.path;
+    } catch (err) {
+        console.error("Error transforming path:", err);
+        return pathData; // Return original if transformation fails
     }
-
-    return newPath;
 }

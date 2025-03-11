@@ -79,8 +79,8 @@ function calc(input: number[][]): [Angle[], Line[]] {
         }
     }
 
-    console.log(lines)
-    console.log(angles)
+    console.log("lines", lines)
+    console.log("angles", angles)
 
     return [angles, lines];
 }
@@ -296,7 +296,6 @@ export const Painter: FC = () => {
         const measure = () => {
             if (displayRef.current) {
                 const rect = displayRef.current.getBoundingClientRect();
-                console.log(rect, window.devicePixelRatio);
                 const pxToMm = 25.4 / 96;
                 // Divide rect dimensions by zoom to use the unscaled dimensions
                 const effectiveWidthMm = Math.ceil((rect.width / zoom) * pxToMm);
@@ -315,12 +314,7 @@ export const Painter: FC = () => {
 
     const handleStartPause = () => {
         if (!currentSVG) return;
-        if (!state.isPaused) {
-            dispatch({type: 'PAUSE'});
-        } else {
-            sendArray();
-            dispatch({type: 'RESUME'});
-        }
+        sendArray();
     };
 
     function splitTextByBytes(text: string, maxBytes: number = 500): string[] {
@@ -375,8 +369,6 @@ export const Painter: FC = () => {
                     const drawn = detail.slice(3);
                     const x = (parseInt(drawn) / (outputCommands.length)) * 100;
                     console.log(`Drawing ${Math.round(x)}`);
-                    console.log(drawn - 1);
-                    console.log(drawn);
 
                     document.querySelector(`div[data-index="${drawn - 1}"]`)?.classList.remove(Styles["dactive"]);
                     document.querySelector(`div[data-index="${drawn - 1}"]`)?.classList.add(Styles["dcomplete"]);
@@ -427,6 +419,7 @@ export const Painter: FC = () => {
     const handleCancel = () => {
         dispatch({type: 'STOP'});
         setIsIndicatorActive(false);
+        navigate("/Upload");
     };
 
     useEffect(() => {
@@ -447,8 +440,6 @@ export const Painter: FC = () => {
     }, [currentSVG]);
 
     const handleScaleChange = (newScale: number) => {
-        console.log("new scale", newScale);
-
         if (!currentSVG) return;
 
         // Size of A4 paper, with .5cm margin
@@ -576,9 +567,10 @@ export const Painter: FC = () => {
                         <Status/>
                         <ScaleSetting onScaleChange={handleScaleChange}/>
                         <input
+                            className={Styles["painter__zoom"]}
                             type="range"
-                            min={0.1}
-                            max={30}
+                            min={0.5}
+                            max={10}
                             step={0.1}
                             defaultValue={zoom}
                             ref={zoomRef}
@@ -589,8 +581,8 @@ export const Painter: FC = () => {
                     </div>
                     <div className={Styles["painter__buttonContainer"]}>
                         <button className="btn" onClick={handleStartPause}>
-                            {!state.isPaused ? "Pause" : "Start"}
-                            <Icon variant={IconVariant.PLAY_PAUSE}/>
+                            Start
+                            <Icon variant={IconVariant.PLAY}/>
                         </button>
                         <button className="btn" onClick={handleEdit}>
                             Edit
@@ -604,6 +596,5 @@ export const Painter: FC = () => {
                 </div>
             </main>
         </>
-    )
-        ;
+    );
 }

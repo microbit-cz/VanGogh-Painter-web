@@ -130,6 +130,18 @@
     }
 }
 
+.painter__zoom {
+    width: 90%;
+    accent-color: var(--accent);
+    cursor: pointer;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+    background: var(--primary);
+    border: 5px var(--background);
+    border-radius: 10px;
+}
+
 .canvasinner {
     position: absolute;
     z-index: 100000;
@@ -225,7 +237,6 @@
     width: 10px;
     pointer-events: none;
 }
-
 
 .ruler-mark-h {
     position: absolute;

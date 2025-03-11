@@ -6,6 +6,10 @@
     --primary: #95b0e9;
     --secondary: #112c69;
     --accent: #1a65ef;
+    --statusDis: darkred;
+    --statusDisB: #bb0000;
+    --statusCon: #006600;
+    --statusConB: #008800;
 }
 
 @media (prefers-color-scheme: light) {
@@ -15,6 +19,10 @@
         --primary: #16306a;
         --secondary: #aac1ff;
         --accent: #104bd5;
+        --statusDis: #bb0000;
+        --statusDisB: #8B0000;
+        --statusCon: #008800;
+        --statusConB: #006600;
     }
 }
 
