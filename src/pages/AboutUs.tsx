@@ -4,17 +4,6 @@ import Styles from "./AboutUs.module.css";
 import {Footer} from "../components/Footer.tsx";
 
 export const AboutUs: FC = () => {
-    const handleHelpers = () => {
-        const tooltips = document.querySelectorAll(".tooltip__text");
-        tooltips.forEach((tooltip) => {
-            if (tooltip.classList.contains("tooltip__text--hidden")) {
-                tooltip.classList.remove("tooltip__text--hidden");
-            } else {
-                tooltip.classList.add("tooltip__text--hidden");
-            }
-        });
-    }
-
     return (
         <>
             <Header />
@@ -32,9 +21,6 @@ export const AboutUs: FC = () => {
                     </section>
                     <section>
                         <p className={Styles["aboutUs__text"]}>Through this project, we aim to empower individuals to explore the intersection of coding and robotics, fostering a hands-on learning experience that is both educational and enjoyable.</p>
-                    </section>
-                    <section>
-                        <p className={Styles["aboutUs__text"]}>To toggle the tooltips, press 'H' or click <span onClick={handleHelpers}>HERE</span></p>
                     </section>
                 </article>
                 <div className={Styles["aboutUs__imgContainer"]}>

@@ -86,7 +86,7 @@ function calc(input: number[][]): [Angle[], Line[]] {
     return [angles, lines];
 }
 
-function scaleSVGPath(path: string, width, targetWidth: number): string {
+function scaleSVGPath(path: string, width: number, targetWidth: number): string {
     console.log("path before", path);
     const scale = targetWidth / width;
     return new SVGPathCommander(path).transform({

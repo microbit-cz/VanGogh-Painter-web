@@ -24,7 +24,8 @@ function AddElements({ canvas }) {
             const triangle = new Triangle({
                 top: 0,
                 left: 0,
-                radius: 50,
+                width: 100,
+                height: 100,
                 fill: "",
                 stroke: "black"
             });

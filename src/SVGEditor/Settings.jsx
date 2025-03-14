@@ -7,6 +7,7 @@ function Settings({ canvas }) {
     const [height, setHeight] = useState("");
     const [diameter, setDiameter] = useState("");
     const [color, setColor] = useState("");
+    const [radius, setRadius] = useState("");
 
     useEffect(() => {
         if (canvas) {
@@ -81,19 +82,6 @@ function Settings({ canvas }) {
             canvas.renderAll();
         }
     };
-/*
-    const handleRadiusChange = (e) => {
-        const value = e.target.value.replace(/,/g, "");
-        const intValue = parseInt(value, 10);
-
-        setRadius(intValue);
-
-        if (selectedObject && selectedObject.type === "triangle" && intValue >= 0) {
-            selectedObject.set({ radius: intValue / selectedObject.scaleX });
-            canvas.renderAll();
-        }
-    }
-*/
     const handleDiameterChange = (e) => {
         const value = e.target.value.replace(/,/g, "");
         const intValue = parseInt(value, 10);
@@ -106,13 +94,14 @@ function Settings({ canvas }) {
         }
     };
 
-    const handleColorChange = (e) => {
-        const value = e.target.value;
+    const handleRadiusChange = (e) => {
+        const value = e.target.value.replace(/,/g, "");
+        const intValue = parseInt(value, 10);
 
-        setColor(value);
+        setRadius(intValue);
 
-        if (selectedObject) {
-            selectedObject.set({ fill: value });
+        if (selectedObject && selectedObject.type === "triangle" && intValue >= 0) {
+            selectedObject.set({ radius: intValue / selectedObject.scaleX });
             canvas.renderAll();
         }
     };
@@ -137,7 +126,12 @@ function Settings({ canvas }) {
             )}
             {selectedObject && selectedObject.type === "triangle" && (
                 <>
-
+                    <Input
+                        fluid
+                        label="Radius"
+                        value={radius}
+                        onChange={handleRadiusChange}
+                    />
                 </>
             )}
             {selectedObject && selectedObject.type === "circle" && (

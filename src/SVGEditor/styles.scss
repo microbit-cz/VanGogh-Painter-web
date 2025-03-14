@@ -10,9 +10,10 @@ body {
     align-items: center;
     justify-content: flex-start;
     flex-direction: column;
-    padding: 100px 16px;
+    padding: 32px 16px;
     background-color: var(--gray-200);
     width: 100%;
+    height: calc(100vh - 6em);
 }
 #canvas {
     border: 1px solid var(--border-neutral-subtle);
@@ -39,7 +40,6 @@ body {
 }
 .Settings {
     position: relative;
-    right: 100%;
     top: 0;
     transform: translateY(-50%);
     gap: 8px;
@@ -55,20 +55,21 @@ body {
 }
 .CanvasSettings {
     position: relative;
-    right: -100%;
-    top: 50%;
     transform: translateY(-50%);
     gap: 8px;
     display: flex;
     flex-direction: column;
     background-color: var(--background-neutral-container);
     padding: 24px 8px;
+    bottom: 0;
+    left: 0;
     border-radius: 4px;
     text-align: left;
     &:empty {
         padding: 0;
     }
 }
+
 
 @media (max-width: 768px) {
     .App {

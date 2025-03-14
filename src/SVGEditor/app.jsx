@@ -64,7 +64,7 @@ function CanvasApp({svgData, save}) {
                 <AddElements canvas={canvas}/>
             </div>
             <canvas id="canvas" ref={canvasRef}/>
-            <div>
+            <div className="container">
                 <CanvasSettings canvas={canvas}/>
                 <Settings canvas={canvas}/>
             </div>
