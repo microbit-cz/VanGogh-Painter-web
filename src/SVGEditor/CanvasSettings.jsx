@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect, useContext} from "react";
 import { Input } from "blocksin-system";
+import {PainterContext} from "../providers/PainterProvider.js";
 
 function CanvasSettings({ canvas }) {
     const [canvasHeight, setCanvasHeight] = useState(500);
     const [canvasWidth, setCanvasWidth] = useState(500);
+
+    const {setWidth} = useContext(PainterContext);
 
     useEffect(() => {
         if (canvas) {
@@ -18,6 +21,7 @@ function CanvasSettings({ canvas }) {
         const intValue = parseInt(value, 10);
         if (intValue >= 0) {
             setCanvasWidth(intValue);
+            setWidth(intValue);
         }
     };
 

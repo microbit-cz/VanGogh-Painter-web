@@ -10,7 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@svgedit/svgcanvas": "^7.2.3",
     "@vercel/analytics": "^1.5.0",
     "blocksin-system": "^1.6.1",
     "color-string": "^2.0.1",
@@ -22,7 +21,8 @@
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.28.0",
     "sebikostudio-icons": "^1.4.9",
-    "svg-path-commander": "^2.1.10"
+    "svg-path-commander": "^2.1.10",
+    "svgpath": "^2.6.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",

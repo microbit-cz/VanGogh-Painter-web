@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { extractPathData } from "../utils.ts";
 
 export const Upload: FC = () => {
-    const { setCurrentSVG, setUnprocessedSVG, setUnprocessedSVGstr } = useContext(PainterContext);
+    const { setCurrentSVG, setUnprocessedSVG, setUnprocessedSVGstr, setCanvas } = useContext(PainterContext);
     const navigate = useNavigate();
 
     const handleFileUpload = (file: File) => {
@@ -40,6 +40,7 @@ export const Upload: FC = () => {
             } else {
                 console.error("No SVG element found in the uploaded file");
             }
+            setCanvas(null);
         } catch (error) {
             console.error("Error processing SVG:", error);
         }

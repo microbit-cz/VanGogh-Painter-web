@@ -7,8 +7,8 @@ function AddElements({ canvas }) {
     const addRectangle = () => {
         if (canvas) {
             const rect = new Rect({
-                top: 100,
-                left: 50,
+                top: 0,
+                left: 0,
                 width: 100,
                 height: 60,
                 fill: "",
@@ -22,8 +22,8 @@ function AddElements({ canvas }) {
     const addTriangle = () => {
         if (canvas) {
             const triangle = new Triangle({
-                top: 100,
-                left: 50,
+                top: 0,
+                left: 0,
                 radius: 50,
                 fill: "",
                 stroke: "black"
@@ -36,8 +36,8 @@ function AddElements({ canvas }) {
     const addCircle = () => {
         if (canvas) {
             const circle = new Circle({
-                top: 100,
-                left: 50,
+                top: 0,
+                left: 0,
                 radius: 50,
                 fill: "",
                 stroke: "black"

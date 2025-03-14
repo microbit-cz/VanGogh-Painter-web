@@ -8,6 +8,7 @@ import {PainterContext} from "../providers/PainterProvider.tsx";
 import {useNavigate} from "react-router-dom";
 import {microbitStore} from "../stores/main.ts";
 import {main} from "../converter";
+import SVGPathCommander from "svg-path-commander";
 
 interface Angle {
     val: string
@@ -85,191 +86,12 @@ function calc(input: number[][]): [Angle[], Line[]] {
     return [angles, lines];
 }
 
-function scaleSVGPath(path: string, targetWidth: number): string {
-    // Parse the path into commands and their numeric arguments.
-    const commandRegex =
-        /([MLHVCSQTAZmlhvcsqtaz])([^MLHVCSQTAZmlhvcsqtaz]*)/g;
-    const commands: { command: string; args: number[] }[] = [];
-    for (const match of path.matchAll(commandRegex)) {
-        const command = match[1];
-        const argsStr = match[2].trim();
-        const args = argsStr
-            ? argsStr.split(/[\s,]+/).map((numStr) => parseFloat(numStr))
-            : [];
-        commands.push({command, args});
-    }
-
-    // Determine the bounding box (only horizontal bounds are used for scaling, but vertical bounds are used for translation to keep the shape’s relative position).
-    let xMin = Infinity,
-        xMax = -Infinity,
-        yMin = Infinity,
-        yMax = -Infinity;
-    for (const {command, args} of commands) {
-        switch (command.toUpperCase()) {
-            case "M":
-            case "L":
-            case "T":
-                // These commands use (x, y) pairs.
-                for (let i = 0; i < args.length; i += 2) {
-                    const x = args[i];
-                    const y = args[i + 1];
-                    xMin = Math.min(xMin, x);
-                    xMax = Math.max(xMax, x);
-                    yMin = Math.min(yMin, y);
-                    yMax = Math.max(yMax, y);
-                }
-                break;
-            case "H":
-                // H takes only x values.
-                for (const x of args) {
-                    xMin = Math.min(xMin, x);
-                    xMax = Math.max(xMax, x);
-                }
-                break;
-            case "V":
-                // V takes only y values.
-                for (const y of args) {
-                    yMin = Math.min(yMin, y);
-                    yMax = Math.max(yMax, y);
-                }
-                break;
-            case "C":
-                // Cubic Bezier: x1,y1, x2,y2, x,y per segment.
-                for (let i = 0; i < args.length; i += 6) {
-                    const x1 = args[i],
-                        y1 = args[i + 1],
-                        x2 = args[i + 2],
-                        y2 = args[i + 3],
-                        x = args[i + 4],
-                        y = args[i + 5];
-                    xMin = Math.min(xMin, x1, x2, x);
-                    xMax = Math.max(xMax, x1, x2, x);
-                    yMin = Math.min(yMin, y1, y2, y);
-                    yMax = Math.max(yMax, y1, y2, y);
-                }
-                break;
-            case "S":
-            case "Q":
-                // S and Q: x1,y1, x,y per segment.
-                for (let i = 0; i < args.length; i += 4) {
-                    const x1 = args[i],
-                        y1 = args[i + 1],
-                        x = args[i + 2],
-                        y = args[i + 3];
-                    xMin = Math.min(xMin, x1, x);
-                    xMax = Math.max(xMax, x1, x);
-                    yMin = Math.min(yMin, y1, y);
-                    yMax = Math.max(yMax, y1, y);
-                }
-                break;
-            case "A":
-                // Arc: rx,ry,x-axis-rotation,large-arc-flag,sweep-flag,x,y
-                for (let i = 0; i < args.length; i += 7) {
-                    const x = args[i + 5],
-                        y = args[i + 6];
-                    xMin = Math.min(xMin, x);
-                    xMax = Math.max(xMax, x);
-                    yMin = Math.min(yMin, y);
-                    yMax = Math.max(yMax, y);
-                }
-                break;
-            case "Z":
-                break;
-        }
-    }
-
-    const currentWidth = xMax - xMin;
-    if (currentWidth === 0) {
-        console.warn("SVG path has zero width.");
-        return path;
-    }
-
-    const scale = targetWidth / currentWidth;
-
-    // Rebuild the path using the scale factor.
-    // We subtract xMin and yMin to translate the shape so that
-    // the minimum coordinates are at (0, 0).
-    const newCommands = commands.map(({command, args}) => {
-        const newArgs: string[] = [];
-        switch (command.toUpperCase()) {
-            case "M":
-            case "L":
-            case "T": {
-                for (let i = 0; i < args.length; i += 2) {
-                    const x = (args[i] - xMin) * scale;
-                    const y = (args[i + 1] - yMin) * scale;
-                    newArgs.push(`${x.toFixed(2)} ${y.toFixed(2)}`);
-                }
-                break;
-            }
-            case "H": {
-                for (const xVal of args) {
-                    const x = (xVal - xMin) * scale;
-                    newArgs.push(x.toFixed(2));
-                }
-                break;
-            }
-            case "V": {
-                for (const yVal of args) {
-                    const y = (yVal - yMin) * scale;
-                    newArgs.push(y.toFixed(2));
-                }
-                break;
-            }
-            case "C": {
-                for (let i = 0; i < args.length; i += 6) {
-                    const x1 = (args[i] - xMin) * scale;
-                    const y1 = (args[i + 1] - yMin) * scale;
-                    const x2 = (args[i + 2] - xMin) * scale;
-                    const y2 = (args[i + 3] - yMin) * scale;
-                    const x = (args[i + 4] - xMin) * scale;
-                    const y = (args[i + 5] - yMin) * scale;
-                    newArgs.push(
-                        `${x1.toFixed(2)} ${y1.toFixed(2)} ${x2.toFixed(2)} ${y2.toFixed(
-                            2
-                        )} ${x.toFixed(2)} ${y.toFixed(2)}`
-                    );
-                }
-                break;
-            }
-            case "S":
-            case "Q": {
-                for (let i = 0; i < args.length; i += 4) {
-                    const x1 = (args[i] - xMin) * scale;
-                    const y1 = (args[i + 1] - yMin) * scale;
-                    const x = (args[i + 2] - xMin) * scale;
-                    const y = (args[i + 3] - yMin) * scale;
-                    newArgs.push(
-                        `${x1.toFixed(2)} ${y1.toFixed(2)} ${x.toFixed(2)} ${y.toFixed(2)}`
-                    );
-                }
-                break;
-            }
-            case "A": {
-                for (let i = 0; i < args.length; i += 7) {
-                    // rx and ry are scaled; x and y are translated.
-                    const rx = args[i] * scale;
-                    const ry = args[i + 1] * scale;
-                    const xAxisRotation = args[i + 2];
-                    const largeArcFlag = args[i + 3];
-                    const sweepFlag = args[i + 4];
-                    const x = (args[i + 5] - xMin) * scale;
-                    const y = (args[i + 6] - yMin) * scale;
-                    newArgs.push(
-                        `${rx.toFixed(2)} ${ry.toFixed(2)} ${xAxisRotation.toFixed(
-                            2
-                        )} ${largeArcFlag} ${sweepFlag} ${x.toFixed(2)} ${y.toFixed(2)}`
-                    );
-                }
-                break;
-            }
-            case "Z": {
-                break;
-            }
-        }
-        return command + (newArgs.length ? " " + newArgs.join(" ") : "");
-    });
-    return newCommands.join(" ");
+function scaleSVGPath(path: string, width, targetWidth: number): string {
+    console.log("path before", path);
+    const scale = targetWidth / width;
+    return new SVGPathCommander(path).transform({
+        scale: [scale, scale],
+    }).toString();
 }
 
 
@@ -291,6 +113,7 @@ export const Painter: FC = () => {
     const displayRef = useRef<HTMLDivElement>(null);
     const [rulerWidth, setRulerWidth] = useState(300);
     const [rulerHeight, setRulerHeight] = useState(300);
+    const {width} = useContext(PainterContext);
 
     useEffect(() => {
         const measure = () => {
@@ -426,7 +249,8 @@ export const Painter: FC = () => {
         if (!currentSVG) return;
 
         // Size of A4 paper, with .5cm margin
-        const svg = scaleSVGPath(currentSVG.join(" "), 269.4);
+        const svg = scaleSVGPath(currentSVG.join(" "), width, 269.4);
+        console.log("scaled", svg);
 
         const cmds = main(svg);
         const generated = [...cmds, [4, 0]]; // Append the final command.
@@ -443,7 +267,7 @@ export const Painter: FC = () => {
         if (!currentSVG) return;
 
         // Size of A4 paper, with .5cm margin
-        const svg = scaleSVGPath(currentSVG.join(" "), 269.4 * newScale);
+        const svg = scaleSVGPath(currentSVG.join(" "), width, 269.4 * newScale);
 
         const cmds = main(svg);
         const generated = [...cmds, [4, 0]]; // Append the final command.

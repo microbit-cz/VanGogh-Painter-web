@@ -1,4 +1,4 @@
-import {FC, useContext} from "react";
+import {FC, useContext, useEffect} from "react";
 import {Header} from "../components/Header.tsx";
 import Styles from "./Editor.module.css";
 import {Icon, IconVariant} from "../components/Icon.tsx";
@@ -9,8 +9,7 @@ import {PainterContext} from "../providers/PainterProvider.tsx";
 // @ts-expect-error
 import CanvasApp from "../SVGEditor/app.jsx";
 import {extractPathData} from "../utils.ts";
-import {Canvas} from "fabric";
-import {processObjects} from "../SVGEditor/export";
+import {convertObjects} from "../SVGEditor/converter.ts";
 
 export const EditorPage: FC = () => {
     const {
@@ -18,7 +17,9 @@ export const EditorPage: FC = () => {
         setCurrentSVG,
         setUnprocessedSVG,
         setUnprocessedSVGstr,
-        canvasRef
+        canvasRef,
+        canvas,
+        setCanvas,
     } = useContext(PainterContext);
     const navigate = useNavigate();
 
@@ -36,45 +37,39 @@ export const EditorPage: FC = () => {
             console.log(canvasRef.current);
             console.log("saving");
 
-            const canvas = canvasRef.current;
+            const objects = canvasRef.current.getObjects();
 
-            // Create a temporary canvas
-            const tempCanvas = new Canvas(document.createElement("canvas"), {
-                width: canvas.width,
-                height: canvas.height
-            });
+            // Generate the path data from the canvas objects
+            const path = convertObjects(objects);
 
-            processObjects(canvas.getObjects(), tempCanvas, [1,0,0,1,0,0]);
+            // Create an SVG element with a <path> that uses the generated path data
+            const svgNamespace = "http://www.w3.org/2000/svg";
+            const svgElement = document.createElementNS(svgNamespace, "svg");
 
-            const svgOptions = {
-                suppressPreamble: false,
-                viewBox: {
-                    x: 0,
-                    y: 0,
-                    width: canvas.width,
-                    height: canvas.height
-                },
-                width: canvas.width.toString(),
-                height: canvas.height.toString(),
-            };
+            // Create the path element with the "d" attribute set to the generated path data
+            const pathElement = document.createElementNS(svgNamespace, "path");
+            pathElement.setAttribute("d", path);
 
-            const svgData = tempCanvas.toSVG(svgOptions);
-            console.log(svgData);
+            // Append the path element to the SVG
+            svgElement.appendChild(pathElement);
 
-            tempCanvas.dispose();
-
-            const svgElement = new DOMParser().parseFromString(svgData, "image/svg+xml").querySelector('svg');
-
+            // Existing code for handling another svgElement (if present)
             if (svgElement) {
                 setUnprocessedSVG(svgElement);
-                setUnprocessedSVGstr(svgData);
+                setUnprocessedSVGstr(svgElement.outerHTML);
 
                 const pathDataList = extractPathData(svgElement);
                 setCurrentSVG(pathDataList);
             }
+
+            setCanvas(canvasRef.current.toJSON());
         }
     };
 
+    useEffect(() => {
+        if (!canvas || !canvasRef.current) return;
+        canvasRef.current.loadFromJSON(canvas);
+    }, [canvas, canvasRef]);
 
     return (
         <>
