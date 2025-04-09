@@ -16,7 +16,7 @@ function App() {
                 <Route path="/Editor" element={<EditorPage />} />
                 <Route path={"*"} element={<div>404 Not Found</div>} />
             </>
-        ), {basename: "/"}
+        ), {basename: "/VanGogh-Painter-web/"}
     )
 
     return (
