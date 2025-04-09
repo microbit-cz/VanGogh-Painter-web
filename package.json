@@ -13,7 +13,6 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
-    "@vercel/analytics": "^1.5.0",
     "blocksin-system": "^1.6.1",
     "color-string": "^2.0.1",
     "fabric": "^6.6.1",
