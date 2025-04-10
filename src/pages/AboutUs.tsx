@@ -2,6 +2,12 @@ import {FC} from "react";
 import {Header} from "../components/Header.tsx";
 import Styles from "./AboutUs.module.css";
 import {Footer} from "../components/Footer.tsx";
+import VGpainter1 from "../img/VGpainter1-DS.jpg";
+import VGpainter2 from "../img/VGpainter2-DS.jpg";
+import VGpainter3 from "../img/VGpainter3-DS.jpg";
+import VGpainter4 from "../img/VGpainter4-DS.jpg";
+import VGpainter5 from "../img/VGpainter5-DS.jpg";
+import VGpainter6 from "../img/VGpainter6-DS.jpg";
 
 export const AboutUs: FC = () => {
     return (
@@ -24,12 +30,12 @@ export const AboutUs: FC = () => {
                     </section>
                 </article>
                 <div className={Styles["aboutUs__imgContainer"]}>
-                    <img className={Styles["aboutUs__img"]} src={"/img/VGpainter1.jpg"} alt={"VanGogh Painter"}/>
-                    <img className={Styles["aboutUs__img"]} src={"/img/VGpainter2.jpg"} alt={"VanGogh Painter"}/>
-                    <img className={Styles["aboutUs__img"]} src={"/img/VGpainter4.jpg"} alt={"VanGogh Painter"}/>
-                    <img className={Styles["aboutUs__img"]} src={"/img/VGpainter3.jpg"} alt={"VanGogh Painter"}/>
-                    <img className={Styles["aboutUs__img"]} src={"/img/VGpainter5.jpg"} alt={"VanGogh Painter"}/>
-                    <img className={Styles["aboutUs__img"]} src={"/img/VGpainter6.jpg"} alt={"VanGogh Painter"}/>
+                    <img className={Styles["aboutUs__img"]} src={VGpainter1} alt={"VanGogh Painter"}/>
+                    <img className={Styles["aboutUs__img"]} src={VGpainter2} alt={"VanGogh Painter"}/>
+                    <img className={Styles["aboutUs__img"]} src={VGpainter3} alt={"VanGogh Painter"}/>
+                    <img className={Styles["aboutUs__img"]} src={VGpainter4} alt={"VanGogh Painter"}/>
+                    <img className={Styles["aboutUs__img"]} src={VGpainter5} alt={"VanGogh Painter"}/>
+                    <img className={Styles["aboutUs__img"]} src={VGpainter6} alt={"VanGogh Painter"}/>
                 </div>
             </main>
             <Footer/>
