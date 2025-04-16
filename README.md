@@ -5,7 +5,7 @@ This is a web application that cooperates with the [VanGogh Painter](https://git
 
 ## Usage
 - Connection to the robot is unfortunately not compatible with Windows 10, because of the system soon losing support. Therefore, it would not make sense to implement this feature in the long term.
-1. Open the [web application](https://van-gogh-painter-web.vercel.app/) or run locally through the command line(`npm run dev` in the root directory of the project).
+1. Open the [web application](https://microbit-cz.github.io/VanGogh-Painter-web/) or run locally through the command line(`npm run dev` in the root directory of the project).
 2. Pair the micro:bit to the computer.
 3. Click on the "Connect" button and select the micro:bit from the list.
 4. Click on the 'Upload' section and select the SVG file of your choice.
