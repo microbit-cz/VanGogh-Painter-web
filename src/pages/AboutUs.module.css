@@ -6,6 +6,7 @@
     margin: 2em;
     background-color: var(--background);
     color: var(--text);
+    gap: 1em;
 }
 
 .aboutUs__article {
@@ -36,12 +37,15 @@
     grid-template-columns: 1fr 1fr;
     gap: 1em;
     margin: 0 auto;
+    align-self: start;
 }
-
+.aboutUs__imgContainer a{
+    cursor: pointer;
+}
 .aboutUs__img {
-    width: 20em;
-    height: fit-content;
+    max-width: 20em;
     margin: 0;
+    display: block;
 }
 
 @media (max-width: 1124px) {

@@ -9,22 +9,20 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "predeploy": "npm run build",
+    "predeploy": "tsc -b && vite build --base /VanGogh-Painter-web/",
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "blocksin-system": "^1.6.1",
-    "color-string": "^2.0.1",
     "fabric": "^6.6.1",
+    "lightgallery": "^2.8.3",
     "microbit-web-bluetooth": "^0.7.0",
     "prop-types": "^15.8.1",
     "react": "^18.3.1",
-    "react-color": "^2.19.3",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.28.0",
     "sebikostudio-icons": "^1.4.9",
-    "svg-path-commander": "^2.1.10",
-    "svgpath": "^2.6.0"
+    "svg-path-commander": "^2.1.10"
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
@@ -39,6 +37,6 @@
     "less": "^4.2.2",
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.11.0",
-    "vite": "^6.1.0"
+    "vite": "^6.2.6"
   }
 }

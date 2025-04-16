@@ -1,4 +1,12 @@
 import {FC} from "react";
+import LightGallery from 'lightgallery/react';
+import lgThumbnail from 'lightgallery/plugins/thumbnail';
+import lgZoom from 'lightgallery/plugins/zoom';
+import lgAutoplay from 'lightgallery/plugins/autoplay';
+import 'lightgallery/css/lightgallery.css';
+import 'lightgallery/css/lg-zoom.css';
+import 'lightgallery/css/lg-thumbnail.css';
+import 'lightgallery/css/lg-autoplay.css';
 import {Header} from "../components/Header.tsx";
 import Styles from "./AboutUs.module.css";
 import {Footer} from "../components/Footer.tsx";
@@ -8,6 +16,12 @@ import VGpainter3 from "../img/VGpainter3-DS.jpg";
 import VGpainter4 from "../img/VGpainter4-DS.jpg";
 import VGpainter5 from "../img/VGpainter5-DS.jpg";
 import VGpainter6 from "../img/VGpainter6-DS.jpg";
+import VGpBig1 from "../img/VGpainter1.jpg";
+import VGpBig2 from "../img/VGpainter2.jpg";
+import VGpBig3 from "../img/VGpainter3.jpg";
+import VGpBig4 from "../img/VGpainter4.jpg";
+import VGpBig5 from "../img/VGpainter5.jpg";
+import VGpBig6 from "../img/VGpainter6.jpg";
 
 export const AboutUs: FC = () => {
     return (
@@ -29,14 +43,14 @@ export const AboutUs: FC = () => {
                         <p className={Styles["aboutUs__text"]}>Through this project, we aim to empower individuals to explore the intersection of coding and robotics, fostering a hands-on learning experience that is both educational and enjoyable.</p>
                     </section>
                 </article>
-                <div className={Styles["aboutUs__imgContainer"]}>
-                    <img className={Styles["aboutUs__img"]} src={VGpainter1} alt={"VanGogh Painter"}/>
-                    <img className={Styles["aboutUs__img"]} src={VGpainter2} alt={"VanGogh Painter"}/>
-                    <img className={Styles["aboutUs__img"]} src={VGpainter3} alt={"VanGogh Painter"}/>
-                    <img className={Styles["aboutUs__img"]} src={VGpainter4} alt={"VanGogh Painter"}/>
-                    <img className={Styles["aboutUs__img"]} src={VGpainter5} alt={"VanGogh Painter"}/>
-                    <img className={Styles["aboutUs__img"]} src={VGpainter6} alt={"VanGogh Painter"}/>
-                </div>
+                <LightGallery mode="lg-fade" speed={400} slideShowAutoplay={true} slideShowInterval={1000} plugins={[lgThumbnail, lgZoom, lgAutoplay]} elementClassNames={Styles["aboutUs__imgContainer"]}>
+                    <a href={VGpBig1}><img className={Styles["aboutUs__img"]} src={VGpainter1} alt={"VanGogh Painter"}/></a>
+                    <a href={VGpBig2}><img className={Styles["aboutUs__img"]} src={VGpainter2} alt={"VanGogh Painter"}/></a>
+                    <a href={VGpBig3}><img className={Styles["aboutUs__img"]} src={VGpainter3} alt={"VanGogh Painter"}/></a>
+                    <a href={VGpBig4}><img className={Styles["aboutUs__img"]} src={VGpainter4} alt={"VanGogh Painter"}/></a>
+                    <a href={VGpBig5}><img className={Styles["aboutUs__img"]} src={VGpainter5} alt={"VanGogh Painter"}/></a>
+                    <a href={VGpBig6}><img className={Styles["aboutUs__img"]} src={VGpainter6} alt={"VanGogh Painter"}/></a>
+                </LightGallery>
             </main>
             <Footer/>
         </>
