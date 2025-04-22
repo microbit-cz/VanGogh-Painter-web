@@ -37,6 +37,11 @@
     margin: 0;
 }
 
+.status__connectButton {
+    padding: 0.5em 1em;
+    font-size: 1rem;
+}
+
 @media (max-width: 768px) {
     .status__container {
         margin: 0;

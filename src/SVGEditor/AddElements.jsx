@@ -1,6 +1,6 @@
 import {Circle, Line, Rect, Triangle} from "fabric";
 import {IconButton} from "blocksin-system";
-import {CircleIcon, DownloadIcon, MinusIcon, SquareIcon, TriangleIcon} from "sebikostudio-icons";
+import {CircleIcon, DownloadIcon, MinusIcon, SquareIcon, TrashIcon, TriangleIcon} from "sebikostudio-icons";
 import React from "react";
 
 function AddElements({ canvas }) {
@@ -58,6 +58,17 @@ function AddElements({ canvas }) {
         }
     }
 
+    const deleteSelected = () => {
+        if (!canvas) return;
+
+        const activeObjs = canvas.getActiveObjects();
+        if (activeObjs.length) {
+          activeObjs.forEach(obj => canvas.remove(obj));
+          canvas.discardActiveObject();
+          canvas.requestRenderAll();
+        }
+    };
+
     const exportSVG = () => {
         if (canvas) {
             const svg = canvas.toSVG();
@@ -86,6 +97,9 @@ function AddElements({ canvas }) {
             </IconButton>
             <IconButton onClick={addLine} variant="ghost" size="medium">
                 <MinusIcon/>
+            </IconButton>
+            <IconButton onClick={deleteSelected} variant="ghost" size="medium">
+                <TrashIcon />
             </IconButton>
             <IconButton onClick={exportSVG} variant="ghost" size="medium">
                 <DownloadIcon/>

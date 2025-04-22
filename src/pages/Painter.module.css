@@ -130,10 +130,26 @@
     }
 }
 
+.painter__zoomContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2em;
+    width: 100%;
+    align-items: center;
+}
+
 .painter__zoom {
     width: 90%;
     accent-color: var(--accent);
     cursor: pointer;
+}
+
+.painter__zoomLabel {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1rem;
+    color: var(--text);
+    align-self: start;
+    margin-left: 1.5em;
 }
 
 input[type=range]::-webkit-slider-runnable-track {

@@ -25,11 +25,11 @@ export const EditorPage: FC = () => {
 
     const handleDone = () => {
         handleSave();
-        navigate("/Painter");
+        navigate("/");
     };
 
     const handleCancel = () => {
-        navigate("/Painter");
+        navigate("/");
     };
 
     const handleSave = () => {

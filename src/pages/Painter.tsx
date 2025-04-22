@@ -9,6 +9,7 @@ import {useNavigate} from "react-router-dom";
 import {microbitStore} from "../stores/main.ts";
 import {main} from "../converter";
 import SVGPathCommander from "svg-path-commander";
+import {extractPathData} from "../utils.ts";
 
 interface Angle {
     val: string
@@ -27,7 +28,6 @@ interface Line {
 }
 
 function calc(input: number[][]): [Angle[], Line[]] {
-
     const coords: number[] = [0, 0]
     let angle: number = 0
     let pendown: boolean = false
@@ -114,6 +114,8 @@ export const Painter: FC = () => {
     const [rulerWidth, setRulerWidth] = useState(300);
     const [rulerHeight, setRulerHeight] = useState(300);
     const {width} = useContext(PainterContext);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const { setCurrentSVG, setUnprocessedSVG, setUnprocessedSVGstr, setCanvas } = useContext(PainterContext);
 
     useEffect(() => {
         const measure = () => {
@@ -239,10 +241,46 @@ export const Painter: FC = () => {
         navigate("/Editor");
     }
 
-    const handleCancel = () => {
-        dispatch({type: 'STOP'});
-        setIsIndicatorActive(false);
-        navigate("/Upload");
+    const handleUpload = (file: File) => {
+        if (file.type === 'image/svg+xml') {
+            const reader = new FileReader();
+            reader.onload = handleFileLoad; // Set the onload handler to process the file
+            reader.onerror = () => console.error('Error reading the SVG file');
+            reader.readAsText(file); // Read the file as text
+            navigate("/Painter"); // Navigate to the Painter page
+        }
+    };
+
+    const handleFileLoad = (e: ProgressEvent<FileReader>) => {
+        try {
+            setIsIndicatorActive(false);
+            dispatch({type: 'STOP'});
+
+            const svgContent = e.target?.result as string; // Get the SVG content as a string
+            const svgElement = new DOMParser()
+                .parseFromString(svgContent, "image/svg+xml")
+                .querySelector("svg");
+
+            if (svgElement) {
+                // Save the unprocessed SVG content
+                setUnprocessedSVG(svgElement); // Store the SVG content in unprocessedSVG
+                setUnprocessedSVGstr(svgContent); // Store the SVG content as a string
+                console.log("SVG file uploaded:", svgElement);
+
+                // Use the modified svgElement as the flattened SVG
+                const pathDataList = extractPathData(svgElement);
+                setCurrentSVG(pathDataList); // Set the current SVG path data
+            } else {
+                console.error("No SVG element found in the uploaded file");
+            }
+            setCanvas(null);
+        } catch (error) {
+            console.error("Error processing SVG:", error);
+        }
+    };
+
+    const triggerFileInput = () => {
+        fileInputRef.current?.click();
     };
 
     useEffect(() => {
@@ -388,22 +426,27 @@ export const Painter: FC = () => {
                 </div>
                 <div className={`${Styles["painter__section"]} ${Styles["right"]}`}>
                     <div className={Styles["painter__topContainer"]}>
-                        <Status/>
                         <ScaleSetting onScaleChange={handleScaleChange}/>
-                        <input
-                            className={Styles["painter__zoom"]}
-                            type="range"
-                            min={0.5}
-                            max={10}
-                            step={0.1}
-                            defaultValue={zoom}
-                            ref={zoomRef}
-                            onChange={(event) => {
-                                setZoom(parseFloat(event.target.value));
-                            }}
-                        />
+                        <div className={Styles["painter__zoomContainer"]}>
+                            <label className={Styles["painter__zoomLabel"]}>
+                                Magnifier
+                            </label>
+                            <input
+                                className={Styles["painter__zoom"]}
+                                type="range"
+                                min={0.5}
+                                max={10}
+                                step={0.1}
+                                defaultValue={zoom}
+                                ref={zoomRef}
+                                onChange={(event) => {
+                                    setZoom(parseFloat(event.target.value));
+                                }}
+                            />
+                        </div>
                     </div>
                     <div className={Styles["painter__buttonContainer"]}>
+                        <Status />
                         <button className="btn" onClick={handleStartPause}>
                             Start
                             <Icon variant={IconVariant.PLAY}/>
@@ -412,9 +455,21 @@ export const Painter: FC = () => {
                             Edit
                             <Icon variant={IconVariant.EDIT}/>
                         </button>
-                        <button className="btn" onClick={handleCancel}>
-                            Cancel
-                            <Icon variant={IconVariant.CROSS}/>
+                        <input
+                            style={{display: "none"}}
+                            type="file"
+                            accept="image/svg+xml"
+                            ref={fileInputRef}
+                            onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                    handleUpload(file);
+                                }
+                            }}
+                        />
+                        <button className="btn" onClick={triggerFileInput}>
+                            Upload
+                            <Icon variant={IconVariant.UPLOAD}/>
                         </button>
                     </div>
                 </div>
