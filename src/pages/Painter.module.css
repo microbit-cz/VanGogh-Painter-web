@@ -225,6 +225,7 @@ input[type=range]::-webkit-slider-runnable-track {
 
     &.dactive {
         background-color: rgb(43, 179, 9);
+        z-index: 100000;
     }
 
     &.dcomplete {

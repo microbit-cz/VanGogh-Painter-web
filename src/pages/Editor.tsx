@@ -82,8 +82,8 @@ export const EditorPage: FC = () => {
             <main className={Styles["editor__container"]}>
                 <CanvasApp svgData={unprocessedSVG?.outerHTML}/>
                 <div className={Styles["editor__menu"]}>
-                    <Status/>
                     <div className={Styles["editor__buttonContainer"]}>
+                        <Status/>
                         <button className={"btn"} onClick={handleDone}>Done <Icon variant={IconVariant.EDIT}/></button>
                         <button className={"btn"} onClick={handleCancel}>Cancel <Icon variant={IconVariant.CROSS}/></button>
                     </div>
