@@ -39,6 +39,11 @@ export const EditorPage: FC = () => {
 
             const objects = canvasRef.current.getObjects();
 
+            if (objects.length === 0) {
+                console.log("No objects to save");
+                return;
+            }
+
             // Generate the path data from the canvas objects
             const path = convertObjects(objects);
 
