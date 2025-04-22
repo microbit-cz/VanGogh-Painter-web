@@ -38,8 +38,26 @@
 }
 
 .status__connectButton {
-    padding: 0.5em 1em;
+    position: relative;
+}
+
+.status__connectButton:hover .status__tooltiptext {
+    visibility: visible;
+}
+
+.status__tooltiptext {
+    visibility: hidden;
+    text-align: center;
+    position: absolute;
+    z-index: 1;
+    top: 90%;
     font-size: 1rem;
+    color: var(--text);
+    background-color: var(--background);
+    border: 1px solid var(--primary);
+    border-radius: .5em;
+    padding: .5em;
+    width: 10em;
 }
 
 @media (max-width: 768px) {

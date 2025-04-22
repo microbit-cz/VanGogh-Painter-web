@@ -20,9 +20,6 @@ function CanvasApp({svgData, save}) {
     useEffect(() => {
         if (!canvasRef.current || canvas || lock) return; // Ensure the ref is available
         setLock(true);
-        if (!svgData) {
-            navigate("/");
-        }
 
         const initCanvas = new fabric.Canvas(canvasRef.current, {
             width: 500,
@@ -33,13 +30,15 @@ function CanvasApp({svgData, save}) {
         setCanvas(initCanvas);
         globalCanvasRef.current = initCanvas;
 
-        loadSVGFromString(svgData).then((loadedSvg) => {
-            const group = util.groupSVGElements(loadedSvg.objects, loadedSvg.options);
-            // group.scaleToHeight(500);
-            // group.scaleToWidth(500);
-            initCanvas.add(group);
-            initCanvas.renderAll();
-        })
+        if (svgData) {
+            loadSVGFromString(svgData).then((loadedSvg) => {
+                const group = util.groupSVGElements(loadedSvg.objects, loadedSvg.options);
+                // group.scaleToHeight(500);
+                // group.scaleToWidth(500);
+                initCanvas.add(group);
+                initCanvas.renderAll();
+            });
+        }
 
         initCanvas.on("object:moving", (event) =>
             handleObjectMoving(initCanvas, event.target, guidelines, setGuidelines)

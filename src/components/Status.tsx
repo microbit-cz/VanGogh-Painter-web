@@ -54,18 +54,11 @@ export const Status: FC = () => {
 
     return (
         <>
-            {connStatus && (
-                <div className={Styles["status__container"]}>
-                    <p className={Styles["status__text"]}>VanGogh status: </p>
-                    <Icon variant={IconVariant.NETWORK} color={connStatus ? IconColor.GREEN : IconColor.RED} />
-                </div>
-            )}
-            {!connStatus && (
-                <button className={` btn`} onClick={handleConnect}>
-                    Connect
-                    <Icon variant={IconVariant.BLUETOOTH} />
-                </button>
-            )}
+            <button className={`${Styles["status__connectButton"]} btn`} onClick={handleConnect}>
+                Status
+                <Icon variant={IconVariant.NETWORK} color={connStatus ? IconColor.GREEN : IconColor.RED}/>
+                <span className={Styles["status__tooltiptext"]}>Connect to Micro:bit</span>
+            </button>
         </>
     );
 };

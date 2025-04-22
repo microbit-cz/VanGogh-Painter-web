@@ -247,7 +247,6 @@ export const Painter: FC = () => {
             reader.onload = handleFileLoad; // Set the onload handler to process the file
             reader.onerror = () => console.error('Error reading the SVG file');
             reader.readAsText(file); // Read the file as text
-            navigate("/Painter"); // Navigate to the Painter page
         }
     };
 
