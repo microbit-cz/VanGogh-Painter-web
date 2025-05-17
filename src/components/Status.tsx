@@ -28,27 +28,36 @@ export const Status: FC = () => {
     }, [connStatus, dispatch]);
 
     const handleConnect = async () => {
-        if (device) {
-            if (device.gatt && device.gatt.connected) {
+        if (connStatus) {
+            // === DISCONNECT PATH ===
+            if (device?.gatt?.connected) {
                 await device.gatt.disconnect();
             }
             setDevice(null);
             microbitStore.empty();
             dispatch({ type: "DISCONNECT_CONNECT", payload: false });
-            return;
-        }
-        const newDevice = await requestMicrobit(window.navigator.bluetooth);
-        if (newDevice) {
-            setDevice(newDevice);
-            microbitStore.update("device", newDevice);
-            const services = await getServices(newDevice);
-            microbitStore.update("services", services);
-            if (services.deviceInformationService) {
-                const deviceInformation = await services.deviceInformationService.readDeviceInformation();
-                microbitStore.update("deviceInformation", deviceInformation);
+        } else {
+            // === CONNECT PATH ===
+            const newDevice = await requestMicrobit(window.navigator.bluetooth);
+            if (newDevice) {
+                setDevice(newDevice);
+                microbitStore.update("device", newDevice);
+
+                const services = await getServices(newDevice);
+                microbitStore.update("services", services);
+
+                if (services.deviceInformationService) {
+                    const deviceInformation = await services.deviceInformationService.readDeviceInformation();
+                    microbitStore.update("deviceInformation", deviceInformation);
+                }
+
+                newDevice.addEventListener("gattserverdisconnected", handleConnect);
+                dispatch({ type: "DISCONNECT_CONNECT", payload: true });
+            } else {
+                // user canceled the chooser or something went wrong
+                setConnStatus(false);
+                dispatch({ type: "DISCONNECT_CONNECT", payload: false });
             }
-            newDevice.addEventListener("gattserverdisconnected", handleConnect);
-            dispatch({ type: "DISCONNECT_CONNECT", payload: true });
         }
     };
 
