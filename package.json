@@ -22,7 +22,8 @@
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.28.0",
     "sebikostudio-icons": "^1.4.9",
-    "svg-path-commander": "^2.1.10"
+    "svg-path-commander": "^2.1.10",
+    "svgpath": "^2.6.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",

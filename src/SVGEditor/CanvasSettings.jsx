@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useContext} from "react";
 import { Input } from "blocksin-system";
-import {PainterContext} from "../providers/PainterProvider.js";
+import {PainterContext} from "../providers/PainterProvider.tsx";
 
 function CanvasSettings({ canvas }) {
     const [canvasHeight, setCanvasHeight] = useState(500);

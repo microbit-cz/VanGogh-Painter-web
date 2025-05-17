@@ -57,7 +57,7 @@ export const Status: FC = () => {
             <button className={`${Styles["status__connectButton"]} btn`} onClick={handleConnect}>
                 Status
                 <Icon variant={IconVariant.NETWORK} color={connStatus ? IconColor.GREEN : IconColor.RED}/>
-                <span className={Styles["status__tooltiptext"]}>Connect to Micro:bit</span>
+                <span className={Styles["status__tooltiptext"]}>{connStatus ? "Disconnect from Micro:bit" : "Connect to Micro:bit"}</span>
             </button>
         </>
     );

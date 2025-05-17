@@ -290,7 +290,7 @@ export const Painter: FC = () => {
         console.log("scaled", svg);
 
         const cmds = main(svg);
-        const generated = [...cmds, [4, 0]]; // Append the final command.
+        const generated = [[1, 0], ...cmds, [4, 0]]; // Append the final command.
 
         setOutputCommands(generated);
 
@@ -307,7 +307,8 @@ export const Painter: FC = () => {
         const svg = scaleSVGPath(currentSVG.join(" "), width, 269.4 * newScale);
 
         const cmds = main(svg);
-        const generated = [...cmds, [4, 0]]; // Append the final command.
+
+        const generated = [[1, 0], ...cmds, [4, 0]]; // Append the final command.
 
         setOutputCommands(generated);
 
