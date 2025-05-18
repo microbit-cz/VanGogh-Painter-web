@@ -35,41 +35,32 @@ body {
   border-radius: 4px;
   position: fixed;
   top: 25%;
-  transform: translateY(-50%);
   left: 16px;
+  width: min-content;
 }
 .Toolbar:empty {
   display: none;
 }
 
 .Settings {
-  position: relative;
-  top: 0;
-  transform: translateY(-50%);
   gap: 8px;
   display: flex;
   flex-direction: column;
-  background-color: var(--background-neutral-container);
-  padding: 24px 8px;
   border-radius: 4px;
   text-align: left;
+  width: min-content;
 }
 .Settings:empty {
   padding: 0;
 }
 
 .CanvasSettings {
-  position: relative;
-  transform: translateY(-50%);
   gap: 8px;
   display: flex;
   flex-direction: column;
-  background-color: var(--background-neutral-container);
-  padding: 24px 8px;
-  bottom: 0;
-  left: 0;
   border-radius: 4px;
   text-align: left;
+  width: min-content;
 }
 .CanvasSettings:empty {
   padding: 0;

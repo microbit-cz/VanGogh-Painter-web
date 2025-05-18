@@ -36,14 +36,16 @@ function CanvasSettings({ canvas }) {
     return (
         <div className="CanvasSettings darkmode">
             <Input
+                style={{ width: "100px" }}
                 fluid
-                label="Canvas Width"
+                label="W"
                 value={canvasWidth}
                 onChange={handleWidthChange}
             />
             <Input
+                style={{ width: "100px" }}
                 fluid
-                label="Canvas Height"
+                label="H"
                 value={canvasHeight}
                 onChange={handleHeightChange}
             />

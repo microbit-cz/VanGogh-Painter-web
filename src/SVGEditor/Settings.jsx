@@ -89,7 +89,7 @@ function Settings({ canvas }) {
         setDiameter(intValue);
 
         if (selectedObject && selectedObject.type === "circle" && intValue >= 0) {
-            selectedObject.set({ radius: intValue / 2 / selectedObject.scaleX });
+            selectedObject.set({ diameter: intValue / 2 / selectedObject.scaleX });
             canvas.renderAll();
         }
     };
@@ -112,25 +112,15 @@ function Settings({ canvas }) {
                 <>
                     <Input
                         fluid
-                        label="Width"
+                        label="W"
                         value={width}
                         onChange={handleWidthChange}
                     />
                     <Input
-                        label="Height"
+                        label="H"
                         value={height}
                         fluid
                         onChange={handleHeightChange}
-                    />
-                </>
-            )}
-            {selectedObject && selectedObject.type === "triangle" && (
-                <>
-                    <Input
-                        fluid
-                        label="Radius"
-                        value={radius}
-                        onChange={handleRadiusChange}
                     />
                 </>
             )}
@@ -138,7 +128,7 @@ function Settings({ canvas }) {
                 <>
                     <Input
                         fluid
-                        label="Diameter"
+                        label="Dia"
                         value={diameter}
                         onChange={handleDiameterChange}
                     />

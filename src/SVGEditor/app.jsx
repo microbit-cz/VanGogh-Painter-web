@@ -61,11 +61,11 @@ function CanvasApp({svgData, save}) {
         <div className="App">
             <div className="Toolbar darkmode">
                 <AddElements canvas={canvas}/>
+                <CanvasSettings canvas={canvas}/>
+                <Settings canvas={canvas}/>
             </div>
             <canvas id="canvas" ref={canvasRef}/>
             <div className="container">
-                <CanvasSettings canvas={canvas}/>
-                <Settings canvas={canvas}/>
             </div>
         </div>
     );
