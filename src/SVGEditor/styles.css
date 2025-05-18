@@ -32,7 +32,7 @@ body {
   gap: 8px;
   background-color: var(--background-neutral-container);
   padding: 8px 8px;
-  border-radius: 4px;
+  border-radius: 0.25em;
   position: fixed;
   top: 25%;
   left: 16px;
@@ -46,7 +46,7 @@ body {
   gap: 8px;
   display: flex;
   flex-direction: column;
-  border-radius: 4px;
+  border-radius: 0.25em;
   text-align: left;
   width: min-content;
 }
@@ -58,12 +58,18 @@ body {
   gap: 8px;
   display: flex;
   flex-direction: column;
-  border-radius: 4px;
+  border-radius: 0.25em;
   text-align: left;
   width: min-content;
 }
 .CanvasSettings:empty {
   padding: 0;
+}
+
+.Settings input,
+.CanvasSettings input {
+  max-width: 100px;
+  min-width: 50px !important;
 }
 
 @media (max-width: 768px) {

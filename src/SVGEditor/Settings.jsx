@@ -111,12 +111,14 @@ function Settings({ canvas }) {
             {selectedObject && selectedObject.type === "rect" && (
                 <>
                     <Input
+                        style={{ minWidth: "50px", maxWidth: "50px", padding: "8px" }}
                         fluid
                         label="W"
                         value={width}
                         onChange={handleWidthChange}
                     />
                     <Input
+                        style={{ minWidth: "50px", maxWidth: "50px", padding: "8px" }}
                         label="H"
                         value={height}
                         fluid
@@ -127,6 +129,7 @@ function Settings({ canvas }) {
             {selectedObject && selectedObject.type === "circle" && (
                 <>
                     <Input
+                        style={{ minWidth: "50px", maxWidth: "50px", padding: "8px" }}
                         fluid
                         label="Dia"
                         value={diameter}
