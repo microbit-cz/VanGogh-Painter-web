@@ -6,7 +6,7 @@ import {FC} from "react";
 export const Footer: FC = () => {
     return (
         <footer>
-            <a className={Styles["footer__icon"]} href={"https://github.com/pslib-cz/MP2024-25_Holy-Jan_VanGogh-Painter"}><Icon variant={IconVariant.GITHUB} /></a>
+            <a className={Styles["footer__icon"]} href={"https://github.com/microbit-cz/VanGogh-Painter-web"}><Icon variant={IconVariant.GITHUB} /></a>
             <div className={Styles["footer__linkContainer"]}>
                 <Link className={Styles["footer__link"]} to={"/"}>Home</Link>
                 <Link className={Styles["footer__link"]} to={"/AboutUs"}>About Us</Link>

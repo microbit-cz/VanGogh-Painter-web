@@ -124,10 +124,6 @@
         gap: .5em;
         grid-template-columns: 1fr 1fr
     }
-
-    .painter__buttonContainer button:first-of-type {
-        grid-column: span 2;
-    }
 }
 
 .painter__zoomContainer {
